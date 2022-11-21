@@ -1,0 +1,24 @@
+{
+    "name": "mds/moncashify",
+    "type": "library",
+    "scripts": {
+        "demo": "php example/demo.php"
+    },
+    "require": {
+        "guzzlehttp/guzzle": "^7.5"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Mds\\Moncashify\\": "src/",
+            "Mds\\Moncashify\\Core\\": "src/core/",
+            "Mds\\Moncashify\\Exception\\": "src/exceptions/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Louis Midson Lajeanty",
+            "email": "louismidsonlajeanty@gmail.com"
+        }
+    ]
+}
