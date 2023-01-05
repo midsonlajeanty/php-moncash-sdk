@@ -2,6 +2,10 @@
 
 namespace Mds\Moncashify\Core;
 
+/**
+ * Constants
+ * @final
+ */
 class Constants{
 
     static string $LIVE_URL = "https://moncashbutton.digicelgroup.com/Api";

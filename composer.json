@@ -10,15 +10,13 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Mds\\Moncashify\\": "src/",
-            "Mds\\Moncashify\\Core\\": "src/core/",
-            "Mds\\Moncashify\\Exception\\": "src/exceptions/"
+            "Mds\\Moncashify\\": "src/"
         }
     },
     "authors": [
         {
-            "name": "Louis Midson Lajeanty",
-            "email": "louismidsonlajeanty@gmail.com"
+            "name": "Mds",
+            "email": "mds@louismidson.me"
         }
     ]
 }
