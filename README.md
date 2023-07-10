@@ -8,7 +8,7 @@ Minimum SDK to process payment with Digicel Moncash
 ## Getting started
 
 ```
-composer require mds/php-moncash-sdk 
+composer require midsonlajeanty/php-moncash-sdk 
 ```
 
 ## Usage

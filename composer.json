@@ -1,5 +1,5 @@
 {
-    "name": "mds/php-moncash-sdk",
+    "name": "midsonlajeanty/php-moncash-sdk",
     "type": "library",
     "description": "Minimum SDK to process payment with Digicel Moncash",
     "keywords": ["moncash", "payment"],
