@@ -1,8 +1,8 @@
 <?php
 
-namespace Mds\Moncashify\Core;
+namespace Mds\Moncash\Core;
 
-use Mds\Moncashify\Exception\MoncashException;
+use Mds\Moncash\Exception\MoncashException;
 
 /**
  * Core
@@ -11,20 +11,20 @@ use Mds\Moncashify\Exception\MoncashException;
 class Core
 {
     use Validation;
-    
+
     /**
      * id - Client Id
      *
      * @var string User Client Id provided by Moncash
      */
     private $id;
-        
+
     /**
      * secret - Client Secret
      *
      * @var string User Client Secret provided by Moncash
      */
-    private $secret;  
+    private $secret;
 
     /**
      * authorization - Authorization 
@@ -32,21 +32,21 @@ class Core
      * @var Authorization Authorization Instance with Access Token
      */
     private $authorization;
-    
+
     /**
      * _endpoint - Base URL
      *
      * @var string - Moncash Base URL
      */
     protected $_endpoint;
-    
+
     /**
      * _baseGateway - Base Gateway
      *
      * @var string - Moncash Base Gateway
      */
     protected $_baseGateway;
-    
+
     /**
      * _client - API Client
      *
@@ -54,7 +54,7 @@ class Core
      */
     protected $_client;
 
-    
+
     /**
      * __construct - Create Core Instance
      * 
@@ -72,13 +72,15 @@ class Core
         $this->id = $id;
         $this->secret = $secret;
 
+        // Cofiiguration for `development` or `production`
         $this->setConfig($debug);
+
         $this->_client = new \GuzzleHttp\Client();
 
         $this->authorization = $this->__getAuthorization();
     }
 
-    
+
     /**
      * setConfig - Set Config for `development` or `production` 
      * 
@@ -92,18 +94,18 @@ class Core
     {
         $config = new \stdClass();
 
-        if($debug){
-            $config->endpoint = Constants::$SANDBOX_URL;
-            $config->baseGateway = Constants::$SANDBOX_BASE_GATEWAY;
-        }else{
-            $config->endpoint = Constants::$LIVE_URL;
-            $config->baseGateway = Constants::$LIVE_BASE_GATEWAY;
+        if ($debug) {
+            $config->endpoint = Constants::SANDBOX_URL;
+            $config->baseGateway = Constants::SANDBOX_BASE_GATEWAY;
+        } else {
+            $config->endpoint = Constants::LIVE_URL;
+            $config->baseGateway = Constants::LIVE_BASE_GATEWAY;
         }
 
         $this->_endpoint = $config->endpoint;
         $this->_baseGateway = $config->baseGateway;
     }
-    
+
     /**
      * __getAuthorization - Get Authorization Token
      *
@@ -113,23 +115,22 @@ class Core
     private function __getAuthorization()
     {
         try {
-            $res = $this->_client->post($this->_endpoint . Constants::$TOKEN_URI, [
+            $res = $this->_client->post($this->_endpoint . Constants::TOKEN_URI, [
                 'auth' => [$this->id, $this->secret],
                 'query' => [
                     'grant_type' => 'client_credentials',
                     'scope' => 'read,write'
                 ],
             ]);
-            
-            return Authorization::fromResponse($res);
 
+            return Authorization::fromResponse($res);
         } catch (\GuzzleHttp\Exception\ClientException $e) {
             throw new MoncashException(
                 $e->getResponse()->getBody()->getContents(),
             );
         }
     }
-    
+
     /**
      * _getHeaders - Get Headers
      * 
@@ -147,5 +148,4 @@ class Core
             'Authorization' => $this->authorization->getAuthorizationHeader()
         ];
     }
-
 }

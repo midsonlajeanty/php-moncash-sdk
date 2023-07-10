@@ -1,24 +1,26 @@
 <?php
 
-namespace Mds\Moncashify\Core;
+namespace Mds\Moncash\Core;
 
 /**
  * Constants
  * @final
  */
-class Constants{
+class Constants
+{
 
-    static string $LIVE_URL = "https://moncashbutton.digicelgroup.com/Api";
-    static string $SANDBOX_URL = "https://sandbox.moncashbutton.digicelgroup.com/Api";
+    const LIVE_URL = "https://moncashbutton.digicelgroup.com/Api";
+    const SANDBOX_URL = "https://sandbox.moncashbutton.digicelgroup.com/Api";
 
-    static string $LIVE_BASE_GATEWAY = 'https://moncashbutton.digicelgroup.com/Moncash-middleware';
-    static string $SANDBOX_BASE_GATEWAY = 'https://sandbox.moncashbutton.digicelgroup.com/Moncash-middleware';
+    const LIVE_BASE_GATEWAY = 'https://moncashbutton.digicelgroup.com/Moncash-middleware';
+    const SANDBOX_BASE_GATEWAY = 'https://sandbox.moncashbutton.digicelgroup.com/Moncash-middleware';
 
-    static string $TOKEN_URI = '/oauth/token';
-    static string $REDIRECT_URI = '/Payment/Redirect?token=';
+    const TOKEN_URI = '/oauth/token';
+    const REDIRECT_URI = '/Payment/Redirect?token=';
 
-    static string $PAYMENT_URI = '/v1/CreatePayment';
-    static string $TRANSFERT_URI = '/v1/Transfert';
-    static string $DETAILS_TRANSACTION_URI = '/v1/RetrieveTransactionPayment';
-    static string $DETAILS_ORDER_URI = '/v1/RetrieveOrderPayment';
+    const PAYMENT_URI = '/v1/CreatePayment';
+    const TRANSFERT_URI = '/v1/Transfert';
+    const DETAILS_TRANSACTION_URI = '/v1/RetrieveTransactionPayment';
+    const DETAILS_ORDER_URI = '/v1/RetrieveOrderPayment';
 }
+

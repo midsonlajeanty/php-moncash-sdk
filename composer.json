@@ -1,22 +1,42 @@
 {
-    "name": "mds/moncashify",
+    "name": "mds/php-moncash-sdk",
     "type": "library",
-    "scripts": {
-        "demo": "php example/demo.php"
-    },
-    "require": {
-        "guzzlehttp/guzzle": "^7.5"
-    },
+    "description": "Minimum SDK to process payment with Digicel Moncash",
+    "keywords": ["moncash", "payment"],
     "license": "MIT",
-    "autoload": {
-        "psr-4": {
-            "Mds\\Moncashify\\": "src/"
-        }
+    "homepage": "https://github.com/midsonlajeanty/php-moncash-sdk",
+    "support": {
+        "issues": "https://github.com/midsonlajeanty/php-moncash-sdk/issues",
+        "source": "https://github.com/midsonlajeanty/php-moncash-sdk"
     },
     "authors": [
         {
-            "name": "Mds",
-            "email": "mds@louismidson.me"
+            "name": "Louis Midson LAJEANTY",
+            "email": "dev@louismidson.me"
         }
-    ]
+    ],
+    "scripts": {
+        "demo": "php example/cli.php",
+        "serve": "php -S localhost:1234 -t example"
+    },
+    "require": {
+        "php": "^7.4|^8.2",
+        "guzzlehttp/guzzle": "^7.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "Mds\\Moncash\\": "src/"
+        }
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "require-dev": {
+        "pestphp/pest": "^2.8"
+    }
 }

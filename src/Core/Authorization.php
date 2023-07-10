@@ -1,20 +1,21 @@
 <?php
 
-namespace Mds\Moncashify\Core;
+namespace Mds\Moncash\Core;
 
 /**
  * Authorization
  * @final
  */
-class Authorization{
-    
+class Authorization
+{
+
     /**
      * accessToken - Access Token
      *
      * @var string Moncash Access Token
      */
     private $accessToken;
-        
+
     /**
      * tokenType - Token Type
      *
@@ -22,7 +23,7 @@ class Authorization{
      */
     private $tokenType;
 
-        
+
     /**
      * __construct - Create a new Authorization instance
      *
@@ -30,11 +31,12 @@ class Authorization{
      * 
      * @return void
      */
-    public function __construct(object $data){
+    public function __construct(object $data)
+    {
         $this->accessToken = $data->access_token;
         $this->tokenType = $data->token_type;
     }
-    
+
     /**
      * fromResponse - Create a new Authorization instance from Moncash Response
      *
@@ -42,8 +44,10 @@ class Authorization{
      * 
      * @return Authorization Moncash Authorization Object
      */
-    public static function fromResponse(\Psr\Http\Message\ResponseInterface $res){
+    public static function fromResponse(\Psr\Http\Message\ResponseInterface $res)
+    {
         $data = json_decode($res->getBody());
+
         return new self($data);
     }
 
@@ -52,7 +56,8 @@ class Authorization{
      *
      * @return string Authorization Header
      */
-    public function getAuthorizationHeader(){
-        return $this->tokenType." ".$this->accessToken;
+    public function getAuthorizationHeader()
+    {
+        return $this->tokenType . " " . $this->accessToken;
     }
 }

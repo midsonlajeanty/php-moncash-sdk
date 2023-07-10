@@ -1,44 +1,45 @@
-<?php 
+<?php
 
-namespace Mds\Moncashify;
+namespace Mds\Moncash;
 
-class PaymentDetails{
-    
+class PaymentDetails
+{
+
     /**
      * orderId - OrderId provided by your app.
      *
      * @var string
      */
     private $orderId;
-        
+
     /**
      * transactionId - TransactionId provided by Moncash.
      *
      * @var string
      */
     private $transactionId;
-        
+
     /**
      * cost - Amount paid by the payer.
      *
      * @var float
      */
     private $cost;
-        
+
     /**
      * payer - Payer's phone number.
      *
      * @var string
      */
     private $payer;
-        
+
     /**
      * status - Status of the payment.
      *
      * @var string
      */
     private $status;
-    
+
     /**
      * __construct - Create PaymentDetails Object
      *
@@ -54,7 +55,7 @@ class PaymentDetails{
         $this->payer = $data->payer;
         $this->status = $data->message;
     }
-    
+
     /**
      * fromResponse - Create PaymentDetails Object from Response
      *
@@ -65,9 +66,10 @@ class PaymentDetails{
     public static function fromResponse(\Psr\Http\Message\ResponseInterface $res)
     {
         $data = json_decode($res->getBody());
+
         return new self($data->payment);
     }
-    
+
     /**
      * getOrderId - Get OrderId
      *
@@ -77,7 +79,7 @@ class PaymentDetails{
     {
         return $this->orderId;
     }
-    
+
     /**
      * getTransactionId - Get TransactionId
      *
@@ -87,7 +89,7 @@ class PaymentDetails{
     {
         return $this->transactionId;
     }
-    
+
     /**
      * getCost - Get Cost
      *
@@ -97,9 +99,9 @@ class PaymentDetails{
     {
         return $this->cost;
     }
-    
+
     /**
-     * getPayer
+     * getPayer - Get Payer
      *
      * @return string Payer's phone number
      */
@@ -107,7 +109,7 @@ class PaymentDetails{
     {
         return $this->payer;
     }
-    
+
     /**
      * getStatus - Get Status
      *
@@ -116,5 +118,31 @@ class PaymentDetails{
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * isSuccessful - Verify Status
+     *
+     * @return string Payment Sucessfull
+     */
+    public function isSuccessful()
+    {
+        return $this->status == 'successful';
+    }
+
+    /**
+     * toArray - Payment Details to Array
+     *
+     * @return array Payment Details
+     */
+    public function toArray()
+    {
+        return [
+            'orderId' => $this->orderId,
+            'transactionId' => $this->transactionId,
+            'cost' => $this->cost,
+            'payer' => $this->payer,
+            'status' => $this->status,
+        ];
     }
 }

@@ -1,5 +1,5 @@
 <?php
 
-namespace Mds\Moncashify\Exception;
+namespace Mds\Moncash\Exception;
 
 class MoncashException extends \Exception{}

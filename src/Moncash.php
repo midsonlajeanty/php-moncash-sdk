@@ -1,33 +1,33 @@
 <?php
 
-namespace Mds\Moncashify;
+namespace Mds\Moncash;
 
-use Mds\Moncashify\Core\Core;
-use Mds\Moncashify\Core\Constants;
+use Mds\Moncash\Core\Core;
+use Mds\Moncash\Core\Constants;
 
-use Mds\Moncashify\Exception\MoncashException;
+use Mds\Moncash\Exception\MoncashException;
 
 /**
- * Moncashify
+ * Moncash
  * 
- * @package Mds\Moncashify
+ * @package Mds\Moncash
  * @version 1.0.0
  * @license MIT
- * @author Mds <mds@louismidson.me>
+ * @author Mds <dev@louismidson.me>
  * 
  * 
  */
 class Moncash extends Core
-{    
+{
     /**
-     * __construct - Create a new Moncashify instance
+     * __construct - Create a new Moncash instance
      * 
      * 
      * ### Example Usage
      * 
      * ```php
      * 
-     * $moncash = new Moncashify('clientId', 'clientSecret', true);
+     * $moncash = new Moncash('clientId', 'clientSecret', true);
      * 
      * $payment = $moncash->makePayment('orderId', 100); 
      * 
@@ -47,10 +47,19 @@ class Moncash extends Core
      */
     public function __construct($clientId, $clientSecret, $debug = true)
     {
-        $this->_validateCredentials($clientId, $clientSecret, $debug);
-        parent::__construct($clientId, $clientSecret, $debug);
+        $this->_validateCredentials(
+            $clientId,
+            $clientSecret,
+            $debug
+        );
+
+        parent::__construct(
+            $clientId,
+            $clientSecret,
+            $debug
+        );
     }
-    
+
     /**
      * makePayment - Process Payment
      *
@@ -65,23 +74,26 @@ class Moncash extends Core
     {
         $this->_validatePaymentPayload($orderId, $amount);
         try {
-            $res = $this->_client->post($this->_endpoint . Constants::$PAYMENT_URI, [
+            $res = $this->_client->post($this->_endpoint . Constants::PAYMENT_URI, [
                 'headers' => $this->_getHeaders(),
                 'json' => [
-                    'orderId' => $orderId, 
+                    'orderId' => $orderId,
                     'amount' => $amount
                 ]
             ]);
 
-            return $this->_createPayment($orderId, $amount, $res);
-
+            return $this->_createPayment(
+                $orderId,
+                $amount,
+                $res
+            );
         } catch (\GuzzleHttp\Exception\ClientException $e) {
             throw new MoncashException(
                 $e->getResponse()->getBody()->getContents()
             );
         }
     }
-    
+
     /**
      * getPaymentDetailsByOrderId - Get Payment Details by Order Id
      *
@@ -90,9 +102,9 @@ class Moncash extends Core
      */
     public function getPaymentDetailsByOrderId(string $orderId)
     {
-        return $this->_getPaymentDetails($orderId, 'order');
+        return $this->_getPaymentDetails($orderId, By::ORDER);
     }
-    
+
     /**
      * getPaymentDetailsByTransactionId - Get Payment Details by Transaction Id
      *
@@ -101,7 +113,7 @@ class Moncash extends Core
      */
     public function getPaymentDetailsByTransactionId(string $transactionId)
     {
-        return $this->_getPaymentDetails($transactionId, 'transaction');
+        return $this->_getPaymentDetails($transactionId, By::TRANSACTION);
     }
 
     /**
@@ -112,23 +124,25 @@ class Moncash extends Core
      * @param  \Psr\Http\Message\ResponseInterface $res
      * @return PaymentDetails PaymentDetails Object
      */
-    private function _createPayment($orderId, $amount, $res)
+    private function _createPayment(string $orderId, string $amount, \Psr\Http\Message\ResponseInterface $res)
     {
         $data = json_decode($res->getBody());
 
-        $expired = new \DateTime(strtotime($data->payment_token->expired));
-        
+        $expired = new \DateTime(
+            strtotime($data->payment_token->expired)
+        );
+
         $payment = new Payment(
-            $orderId, 
-            $amount, 
-            $data->payment_token->token, 
+            $orderId,
+            $amount,
+            $data->payment_token->token,
             $expired,
             $this->_baseGateway
         );
 
         return $payment;
     }
-        
+
     /**
      * _getPaymentDetails - Get Payment Details from Moncash
      *
@@ -136,26 +150,24 @@ class Moncash extends Core
      * @param  string $scope Scope of the identifier, `transaction` or `order`. Default is `transaction`
      * @return void
      */
-    private function _getPaymentDetails(string $identifier, string $scope = 'transaction')
+    private function _getPaymentDetails(string $identifier, By $by = By::TRANSACTION)
     {
         try {
             $url = $this->_endpoint;
-            $url .= $scope == 'transaction' ?  Constants::$DETAILS_TRANSACTION_URI : Constants::$DETAILS_ORDER_URI;
-            
+            $url .= $by == By::TRANSACTION ?  Constants::DETAILS_TRANSACTION_URI : Constants::DETAILS_ORDER_URI;
+
             $res = $this->_client->post($url, [
                 'headers' => $this->_getHeaders(),
                 'json' => [
-                    "{$scope}Id" => $identifier, 
+                    "{$by->value}Id" => $identifier,
                 ]
             ]);
 
             return  PaymentDetails::fromResponse($res);
-
         } catch (\GuzzleHttp\Exception\ClientException $e) {
             throw new MoncashException(
                 $e->getResponse()->getBody()->getContents()
             );
         }
     }
-    
 }
