@@ -1,4 +1,4 @@
-Support for Haitian language translation for flutter applications.
+Minimum SDK to process payment with Digicel Moncash
 
 ## Features
 
