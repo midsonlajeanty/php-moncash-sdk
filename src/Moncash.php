@@ -63,14 +63,14 @@ class Moncash extends Core
     /**
      * makePayment - Process Payment
      *
-     * @param  mixed $orderId Order Id
-     * @param  mixed $amount Amount to Paid
+     * @param  string $orderId Order Id
+     * @param  float|int $amount Amount to Paid
      * 
      * @return Payment Payment Object with Redirect Url
      * 
      * @throws MoncashException
      */
-    public function makePayment(string $orderId, float|int $amount)
+    public function makePayment(string $orderId, float|int $amount) : Payment
     {
         $this->_validatePaymentPayload($orderId, $amount);
         try {
@@ -98,9 +98,12 @@ class Moncash extends Core
      * getPaymentDetailsByOrderId - Get Payment Details by Order Id
      *
      * @param  string $orderId Order Id
+     * 
      * @return PaymentDetails Payment Details Object
+     * 
+     * @throws MoncashException
      */
-    public function getPaymentDetailsByOrderId(string $orderId)
+    public function getPaymentDetailsByOrderId(string $orderId) : PaymentDetails
     {
         return $this->_getPaymentDetails($orderId, By::ORDER);
     }
@@ -109,9 +112,12 @@ class Moncash extends Core
      * getPaymentDetailsByTransactionId - Get Payment Details by Transaction Id
      *
      * @param  string $transactionId Transaction Id
+     * 
      * @return PaymentDetails PaymentDetails Object
+     * 
+     * @throws MoncashException
      */
-    public function getPaymentDetailsByTransactionId(string $transactionId)
+    public function getPaymentDetailsByTransactionId(string $transactionId) : PaymentDetails
     {
         return $this->_getPaymentDetails($transactionId, By::TRANSACTION);
     }
@@ -120,11 +126,14 @@ class Moncash extends Core
      * _createPayment - Create Payment Object
      *
      * @param  string $orderId 
-     * @param  string $amount
+     * @param  float|int $amount
      * @param  \Psr\Http\Message\ResponseInterface $res
-     * @return PaymentDetails PaymentDetails Object
+     * 
+     * @return Payment Payment Object
+     * 
+     * @throws MoncashException
      */
-    private function _createPayment(string $orderId, string $amount, \Psr\Http\Message\ResponseInterface $res)
+    private function _createPayment(string $orderId, float|int $amount, \Psr\Http\Message\ResponseInterface $res) : Payment
     {
         $data = json_decode($res->getBody());
 
@@ -148,9 +157,12 @@ class Moncash extends Core
      *
      * @param  string $identifier Transaction Id or Order Id
      * @param  string $scope Scope of the identifier, `transaction` or `order`. Default is `transaction`
-     * @return void
+     * 
+     * @return PaymentDetails PaymentDetails object
+     * 
+     * @throws MoncashException
      */
-    private function _getPaymentDetails(string $identifier, By $by = By::TRANSACTION)
+    private function _getPaymentDetails(string $identifier, By $by = By::TRANSACTION) : PaymentDetails
     {
         try {
             $url = $this->_endpoint;

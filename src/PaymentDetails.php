@@ -22,7 +22,7 @@ class PaymentDetails
     /**
      * cost - Amount paid by the payer.
      *
-     * @var float
+     * @var float|int
      */
     private $cost;
 
@@ -93,7 +93,7 @@ class PaymentDetails
     /**
      * getCost - Get Cost
      *
-     * @return float Amount paid by the payer.
+     * @return float|int Amount paid by the payer.
      */
     public function getCost()
     {
