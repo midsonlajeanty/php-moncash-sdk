@@ -37,11 +37,11 @@ trait Validation
      * _validatePaymentPayload
      *
      * @param  string $orderId Order Id
-     * @param  float $amount Amount to be paid
+     * @param  float|int $amount Amount to be paid
      * 
      * @throws MoncashException
      */
-    protected function _validatePaymentPayload(string $orderId, float|int $amount)
+    protected function _validatePaymentPayload(string $orderId, $amount)
     {
         if (empty($orderId) || empty($amount)) {
             throw new MoncashException("'orderId' and 'amount' must be provided");

@@ -55,7 +55,7 @@ class Payment
      */
     public function __construct(
         string $orderId,
-        float|int $amount,
+        $amount,
         string $token,
         \DateTime $expireAt,
         string $gateway

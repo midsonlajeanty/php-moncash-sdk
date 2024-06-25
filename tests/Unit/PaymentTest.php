@@ -11,11 +11,11 @@ test('payment object test', function () {
     $gateway = 'https://example.com/';
 
     $payment = new Payment(
-        orderId: $orderId, 
-        amount: $amount, 
-        token: $token, 
-        expireAt: $expireAt, 
-        gateway:$gateway
+        $orderId, 
+        $amount, 
+        $token, 
+        $expireAt, 
+        $gateway
     );
 
     expect($payment->getOrderId())->tobe($orderId);

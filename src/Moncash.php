@@ -70,7 +70,7 @@ class Moncash extends Core
      * 
      * @throws MoncashException
      */
-    public function makePayment(string $orderId, float|int $amount) : Payment
+    public function makePayment(string $orderId, $amount) : Payment
     {
         $this->_validatePaymentPayload($orderId, $amount);
         try {
@@ -133,7 +133,7 @@ class Moncash extends Core
      * 
      * @throws MoncashException
      */
-    private function _createPayment(string $orderId, float|int $amount, \Psr\Http\Message\ResponseInterface $res) : Payment
+    private function _createPayment(string $orderId, $amount, \Psr\Http\Message\ResponseInterface $res) : Payment
     {
         $data = json_decode($res->getBody());
 
