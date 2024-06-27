@@ -1,2 +1,9 @@
-vendor/
-
+/.phpunit.cache
+/vendor
+.DS_Store
+Thumbs.db
+/phpunit.xml*
+/.idea
+/.fleet
+/.vscode
+.phpunit.result.cache
