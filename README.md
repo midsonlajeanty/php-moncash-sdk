@@ -1,12 +1,12 @@
 <p align="center">
     <a href="https://laravel.com" target="_blank">
-        <img src="https://moncashdfs.com/theme/images/logo.png" width="150" alt="Moncash Logo">
+        <img src="https://moncashdfs.com/theme/images/logo.png" width="200" alt="Moncash Logo">
     </a>
 </p>
 
 <p align="center">
     <a href="https://github.com/midsonlajeanty/php-moncash-sdk/actions">
-        <img src="https://github.com/midsonlajeanty/php-moncash-sdk/workflows/tests/badge.svg" alt="Build Status">
+        <img src="https://github.com/midsonlajeanty/php-moncash-sdk/actions/workflows/tests%20.yml/badge.svg" alt="Build Status">
     </a>
     <a href="https://packagist.org/packages/midsonlajeanty/php-moncash-sdk">
         <img src="https://img.shields.io/packagist/dt/midsonlajeanty/php-moncash-sdk" alt="Total Downloads">
@@ -24,7 +24,7 @@ Minimum SDK to process payment with Digicel Moncash Payment Gateway
 
 ## Features
 
-- Init Moncash Payment and get Payment URL  (Moncash Checkout)
+- Create Payment Transaction and get gateway URL  (Moncash Checkout)
 - Get Transaction Details by Transaction and Order ID
 
 ## Getting started
