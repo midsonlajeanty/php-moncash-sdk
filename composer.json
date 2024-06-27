@@ -1,10 +1,12 @@
 {
     "name": "midsonlajeanty/php-moncash-sdk",
     "type": "library",
-    "description": "Minimum SDK to process payment with Digicel Moncash",
-    "keywords": ["moncash", "payment"],
+    "description": "Minimum SDK to process payment with Digicel Moncash Payment Gateway",
+    "keywords": [
+        "moncash",
+        "payment"
+    ],
     "license": "MIT",
-    "version": "1.0.0",
     "homepage": "https://github.com/midsonlajeanty/php-moncash-sdk",
     "support": {
         "issues": "https://github.com/midsonlajeanty/php-moncash-sdk/issues",
