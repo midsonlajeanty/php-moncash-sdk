@@ -6,8 +6,8 @@ namespace Mds\Moncash;
  * PaymentDetailBy
  * @final
  */
-enum By: string
+class By
 {
-    case TRANSACTION = "transaction";
-    case ORDER = "order";
+    const TRANSACTION = "transaction";
+    const ORDER = "order";
 }

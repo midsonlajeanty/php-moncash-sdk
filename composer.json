@@ -2,6 +2,7 @@
     "name": "midsonlajeanty/php-moncash-sdk",
     "type": "library",
     "description": "Minimum SDK to process payment with Digicel Moncash Payment Gateway",
+    "version": "1.0.1",
     "keywords": [
         "moncash",
         "payment"

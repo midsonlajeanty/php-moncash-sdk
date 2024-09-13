@@ -11,7 +11,7 @@ use Mds\Moncash\Exception\MoncashException;
  * Moncash
  * 
  * @package Mds\Moncash
- * @version 1.0.0
+ * @version 1.0.1
  * @license MIT
  * @author Mds <dev@louismidson.me>
  * 
@@ -162,7 +162,7 @@ class Moncash extends Core
      * 
      * @throws MoncashException
      */
-    private function _getPaymentDetails(string $identifier, By $by = By::TRANSACTION) : PaymentDetails
+    private function _getPaymentDetails(string $identifier, string $by = By::TRANSACTION) : PaymentDetails
     {
         try {
             $url = $this->_endpoint;
@@ -171,7 +171,7 @@ class Moncash extends Core
             $res = $this->_client->post($url, [
                 'headers' => $this->_getHeaders(),
                 'json' => [
-                    "{$by->value}Id" => $identifier,
+                    "{$by}Id" => $identifier,
                 ]
             ]);
 
