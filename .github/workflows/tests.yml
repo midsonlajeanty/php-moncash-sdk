@@ -58,4 +58,5 @@ jobs:
 
       - name: Smoke-load the SDK
         if: contains(fromJSON('["7.4", "8.0", "8.4", "8.5"]'), matrix.php)
-        run: php -r "require 'vendor/autoload.php'; exit(class_exists('Mds\\Moncash\\Moncash') ? 0 : 1);"
+        run: |
+          php -r "require 'vendor/autoload.php'; exit(class_exists('Mds\\Moncash\\Moncash') ? 0 : 1);"
