@@ -8,8 +8,6 @@ parameters:
 
     level: 6
 
-    # The library supports PHP 7.4–8.x at runtime; analyse against the whole
-    # range so no 8.1+ syntax slips in (the dev tooling itself requires 8.1+).
     phpVersion:
         min: 70400
         max: 80500

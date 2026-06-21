@@ -40,8 +40,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-php-${{ matrix.php }}-
 
-      # The dev tooling (Rector/PHPStan 2.x, Pest 1.x) requires PHP 8.1-8.3:
-      # run the full suite there.
       - name: Install dependencies
         if: contains(fromJSON('["8.1", "8.2", "8.3"]'), matrix.php)
         run: composer update --prefer-dist --no-progress
@@ -50,8 +48,6 @@ jobs:
         if: contains(fromJSON('["8.1", "8.2", "8.3"]'), matrix.php)
         run: composer test
 
-      # On the other supported versions the tooling cannot run, but the library
-      # itself must still install, parse and load.
       - name: Install runtime dependencies only
         if: contains(fromJSON('["7.4", "8.0", "8.4", "8.5"]'), matrix.php)
         run: composer update --no-dev --prefer-dist --no-progress
