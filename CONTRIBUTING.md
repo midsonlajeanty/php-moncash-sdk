@@ -46,7 +46,7 @@ composer lint            # apply code style fixes
 composer refactor        # apply Rector refactorings
 ```
 
-> **Note:** the test suite uses Pest 1.x (PHPUnit 9). Run it on **PHP 7.4 – 8.3**; PHP 8.4+ emits deprecation notices from Pest itself. CI runs the matrix `7.4`, `8.0`, `8.3`.
+> **Note:** the library targets **PHP 7.4 – 8.5** at runtime, but the dev/test tooling (Rector, PHPStan, Pest 1.x) requires **PHP 8.1+**. Run `composer test` on PHP **8.1 – 8.3** (8.4+ breaks Pest 1.x). CI runs the full suite on `8.1`/`8.2`/`8.3` and a runtime compatibility job (`--no-dev` install + lint + smoke-load) on `7.4`/`8.0`/`8.4`/`8.5`; PHPStan's `phpVersion` range additionally checks the source for **7.4 – 8.5**.
 
 ## Coding Standards
 
