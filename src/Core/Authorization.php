@@ -1,63 +1,41 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mds\Moncash\Core;
 
 /**
  * Authorization
+ *
  * @final
  */
 class Authorization
 {
-
     /**
-     * accessToken - Access Token
-     *
      * @var string Moncash Access Token
      */
-    private $accessToken;
+    private string $accessToken;
 
     /**
-     * tokenType - Token Type
-     *
      * @var string Moncash Token Type
      */
-    private $tokenType;
+    private string $tokenType;
 
-
-    /**
-     * __construct - Create a new Authorization instance
-     *
-     * @param  object $data Moncash Authorization Response
-     * 
-     * @return void
-     */
     public function __construct(object $data)
     {
-        $this->accessToken = $data->access_token;
-        $this->tokenType = $data->token_type;
+        $this->accessToken = (string) $data->access_token;
+        $this->tokenType = (string) $data->token_type;
     }
 
-    /**
-     * fromResponse - Create a new Authorization instance from Moncash Response
-     *
-     * @param  \Psr\Http\Message\ResponseInterface  $res Moncash Response
-     * 
-     * @return Authorization Moncash Authorization Object
-     */
-    public static function fromResponse(\Psr\Http\Message\ResponseInterface $res)
+    public static function fromResponse(\Psr\Http\Message\ResponseInterface $res): Authorization
     {
-        $data = json_decode($res->getBody());
+        $data = json_decode((string) $res->getBody());
 
         return new self($data);
     }
 
-    /**
-     * getAuthorizationHeader - Get Authorization Header
-     *
-     * @return string Authorization Header
-     */
-    public function getAuthorizationHeader()
+    public function getAuthorizationHeader(): string
     {
-        return $this->tokenType . " " . $this->accessToken;
+        return $this->tokenType . ' ' . $this->accessToken;
     }
 }

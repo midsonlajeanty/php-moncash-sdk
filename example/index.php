@@ -1,22 +1,28 @@
 <?php
 
-require '../vendor/autoload.php';
+declare(strict_types=1);
 
-require 'constant.php';
+require dirname(__DIR__) . '/vendor/autoload.php';
+
+require __DIR__ . '/constant.php';
 
 
+use Mds\Moncash\Config;
 use Mds\Moncash\Moncash;
+use Mds\Moncash\PaymentRequest;
 
 if (isset($_POST['create_payment'])) {
 
-    $orderId = $_POST['order_id'];
-    $amount = $_POST['amount'];
+    $orderId = (string) $_POST['order_id'];
+    $amount = (float) $_POST['amount'];
 
-    // Create Moncash Instance
-    $moncash = new Moncash(CLIENT_ID, CLIENT_SECRET);
+    // Create Config and Moncash instance
+    $config = new Config(CLIENT_ID, CLIENT_SECRET);
+    $moncash = new Moncash($config); // pass false as second arg for production
 
-    // Make Paiment with OrderId and Amount
-    $payment = $moncash->makePayment($orderId, $amount);
+    // Create payment request and redirect URL
+    $payment = new PaymentRequest($orderId, $amount);
+    $response = $moncash->makePayment($payment);
 }
 
 ?>
@@ -131,9 +137,9 @@ if (isset($_POST['create_payment'])) {
                     <input type="hidden" name="order_id" value="<?= time() ?> ">
 
                     <div class="float-right">
-                        <?php if (isset($payment)) : ?>
+                        <?php if (isset($response)) : ?>
                             <!-- Redirect to Payment URL -->
-                            <a href="<?= $payment->getRedirect() ?>" type="button" class="btn btn-lg btn-danger">Pay</a>
+                            <a href="<?= $response->getRedirect() ?>" type="button" class="btn btn-lg btn-danger">Pay</a>
                         <?php else : ?>
                             <!-- Generate Payment URL -->
                             <button type="submit" name="create_payment" class="btn btn-lg btn-primary mt-2">Checkout</button>

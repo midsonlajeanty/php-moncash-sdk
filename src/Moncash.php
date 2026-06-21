@@ -1,185 +1,182 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mds\Moncash;
 
 use Mds\Moncash\Core\Core;
 use Mds\Moncash\Core\Constants;
-
-use Mds\Moncash\Exception\MoncashException;
+use Mds\Moncash\Exception\ApiException;
 
 /**
  * Moncash
- * 
- * @package Mds\Moncash
- * @version 1.0.1
+ *
+ * @version 2.0.0
+ *
  * @license MIT
- * @author Mds <dev@louismidson.me>
- * 
- * 
+ * @author Mds <midsonlajeanty@proton.me>
  */
 class Moncash extends Core
 {
     /**
      * __construct - Create a new Moncash instance
-     * 
-     * 
-     * ### Example Usage
-     * 
-     * ```php
-     * 
-     * $moncash = new Moncash('clientId', 'clientSecret', true);
-     * 
-     * $payment = $moncash->makePayment('orderId', 100); 
-     * 
-     * $payment->getRedirect(); // Redirect Url to Moncash Gateway
-     * 
-     * $details = $moncash->getPaymentDetailsByTransactionId('transactionId');
-     * 
-     * $details = $moncash->getPaymentDetailsByOrderId('orderId', 'order');
-     * 
-     * ```
      *
-     * @param  string $clientId User Client Id provided by Moncash
-     * @param  string $clientSecret User Client Secret provided by Moncash
-     * @param  string $debug Mode of use, `true` for development and `false` for production. Default is `true`
-     * 
-     * @return void
+     * Standard usage:
+     *   $moncash = new Moncash(new Config('clientId', 'clientSecret'), true);
+     *
+     * Deprecated usage (still supported):
+     *   $moncash = new Moncash('clientId', 'clientSecret', true);
+     *
+     * @param  Config|string  $config  Config object (standard) or clientId (deprecated)
+     * @param  bool|string  $secretOrDebug  debug flag (standard) or clientSecret (deprecated)
+     * @param  bool  $debug  Deprecated mode only
      */
-    public function __construct($clientId, $clientSecret, $debug = true)
+    public function __construct($config, $secretOrDebug = true, bool $debug = true)
     {
-        $this->_validateCredentials(
-            $clientId,
-            $clientSecret,
-            $debug
-        );
+        if ($config instanceof Config) {
+            $resolvedConfig = $config;
+            $resolvedDebug = is_bool($secretOrDebug) ? $secretOrDebug : true;
+        } else {
+            @trigger_error(
+                'Passing clientId/clientSecret to Moncash::__construct() is deprecated, use Mds\Moncash\Config instead.',
+                E_USER_DEPRECATED
+            );
+            $this->_validateCredentials((string) $config, (string) $secretOrDebug);
+            $resolvedConfig = new Config((string) $config, (string) $secretOrDebug);
+            $resolvedDebug = $debug;
+        }
 
-        parent::__construct(
-            $clientId,
-            $clientSecret,
-            $debug
-        );
+        parent::__construct($resolvedConfig, $resolvedDebug);
     }
 
     /**
      * makePayment - Process Payment
      *
-     * @param  string $orderId Order Id
-     * @param  float|int $amount Amount to Paid
-     * 
-     * @return Payment Payment Object with Redirect Url
-     * 
-     * @throws MoncashException
+     * @param  PaymentRequest|string  $request  PaymentRequest (standard) or orderId (deprecated)
+     * @param  float|null  $amount  Amount (deprecated mode only)
+     * @return PaymentResponse Payment Response Object with redirect URL
+     *
+     * @throws ApiException
      */
-    public function makePayment(string $orderId, $amount) : Payment
+    public function makePayment($request, $amount = null): PaymentResponse
     {
-        $this->_validatePaymentPayload($orderId, $amount);
+        if ($request instanceof PaymentRequest) {
+            $paymentRequest = $request;
+        } else {
+            @trigger_error(
+                'Passing orderId/amount to makePayment() is deprecated, use Mds\Moncash\PaymentRequest instead.',
+                E_USER_DEPRECATED
+            );
+            $paymentRequest = new PaymentRequest((string) $request, (float) $amount);
+        }
+
+        $this->_validatePaymentPayload($paymentRequest->getOrderId(), $paymentRequest->getAmount());
+
         try {
-            $res = $this->_client->post($this->_endpoint . Constants::PAYMENT_URI, [
+            $res = $this->getClient()->request('POST', $this->_endpoint . Constants::PAYMENT_URI, [
                 'headers' => $this->_getHeaders(),
                 'json' => [
-                    'orderId' => $orderId,
-                    'amount' => $amount
-                ]
+                    'orderId' => $paymentRequest->getOrderId(),
+                    'amount' => $paymentRequest->getAmount(),
+                ],
             ]);
 
-            return $this->_createPayment(
-                $orderId,
-                $amount,
-                $res
-            );
+            return $this->_createPayment($paymentRequest, $res);
         } catch (\GuzzleHttp\Exception\ClientException $e) {
-            throw new MoncashException(
-                $e->getResponse()->getBody()->getContents()
-            );
+            throw new ApiException($e->getResponse()->getBody()->getContents(), $e->getCode(), $e);
         }
     }
 
     /**
-     * getPaymentDetailsByOrderId - Get Payment Details by Order Id
+     * getTransactionDetailsByOrderId - Get Transaction Details by Order Id
      *
-     * @param  string $orderId Order Id
-     * 
-     * @return PaymentDetails Payment Details Object
-     * 
-     * @throws MoncashException
+     * @param  string  $orderId  Order Id
+     *
+     * @throws ApiException
      */
-    public function getPaymentDetailsByOrderId(string $orderId) : PaymentDetails
+    public function getTransactionDetailsByOrderId(string $orderId): TransactionDetails
     {
-        return $this->_getPaymentDetails($orderId, By::ORDER);
+        return $this->_getTransactionDetails($orderId, By::ORDER);
     }
 
     /**
-     * getPaymentDetailsByTransactionId - Get Payment Details by Transaction Id
+     * getTransactionDetailsByTransactionId - Get Transaction Details by Transaction Id
      *
-     * @param  string $transactionId Transaction Id
-     * 
-     * @return PaymentDetails PaymentDetails Object
-     * 
-     * @throws MoncashException
+     * @param  string  $transactionId  Transaction Id
+     *
+     * @throws ApiException
      */
-    public function getPaymentDetailsByTransactionId(string $transactionId) : PaymentDetails
+    public function getTransactionDetailsByTransactionId(string $transactionId): TransactionDetails
     {
-        return $this->_getPaymentDetails($transactionId, By::TRANSACTION);
+        return $this->_getTransactionDetails($transactionId, By::TRANSACTION);
     }
 
     /**
-     * _createPayment - Create Payment Object
+     * getPaymentDetailsByOrderId - Deprecated, use getTransactionDetailsByOrderId() instead
      *
-     * @param  string $orderId 
-     * @param  float|int $amount
-     * @param  \Psr\Http\Message\ResponseInterface $res
-     * 
-     * @return Payment Payment Object
-     * 
-     * @throws MoncashException
+     * @deprecated Use getTransactionDetailsByOrderId() instead.
      */
-    private function _createPayment(string $orderId, $amount, \Psr\Http\Message\ResponseInterface $res) : Payment
+    public function getPaymentDetailsByOrderId(string $orderId): TransactionDetails
     {
-        $data = json_decode($res->getBody());
+        @trigger_error('getPaymentDetailsByOrderId() is deprecated, use getTransactionDetailsByOrderId() instead.', E_USER_DEPRECATED);
 
-        $expired = new \DateTime(
-            strtotime($data->payment_token->expired)
-        );
+        return $this->getTransactionDetailsByOrderId($orderId);
+    }
 
-        $payment = new Payment(
-            $orderId,
-            $amount,
-            $data->payment_token->token,
+    /**
+     * getPaymentDetailsByTransactionId - Deprecated, use getTransactionDetailsByTransactionId() instead
+     *
+     * @deprecated Use getTransactionDetailsByTransactionId() instead.
+     */
+    public function getPaymentDetailsByTransactionId(string $transactionId): TransactionDetails
+    {
+        @trigger_error('getPaymentDetailsByTransactionId() is deprecated, use getTransactionDetailsByTransactionId() instead.', E_USER_DEPRECATED);
+
+        return $this->getTransactionDetailsByTransactionId($transactionId);
+    }
+
+    /**
+     * _createPayment - Build PaymentResponse from the API response
+     *
+     * @throws ApiException
+     */
+    private function _createPayment(PaymentRequest $request, \Psr\Http\Message\ResponseInterface $res): PaymentResponse
+    {
+        $data = json_decode((string) $res->getBody());
+
+        $expired = new \DateTime();
+        $expired->setTimestamp((int) strtotime($data->payment_token->expired));
+
+        return new PaymentResponse(
+            $request->getOrderId(),
+            $request->getAmount(),
+            (string) $data->payment_token->token,
             $expired,
             $this->_baseGateway
         );
-
-        return $payment;
     }
 
     /**
-     * _getPaymentDetails - Get Payment Details from Moncash
+     * _getTransactionDetails - Retrieve transaction details from Moncash
      *
-     * @param  string $identifier Transaction Id or Order Id
-     * @param  string $scope Scope of the identifier, `transaction` or `order`. Default is `transaction`
-     * 
-     * @return PaymentDetails PaymentDetails object
-     * 
-     * @throws MoncashException
+     * @throws ApiException
      */
-    private function _getPaymentDetails(string $identifier, string $by = By::TRANSACTION) : PaymentDetails
+    private function _getTransactionDetails(string $identifier, string $by = By::TRANSACTION): TransactionDetails
     {
         try {
             $url = $this->_endpoint;
-            $url .= $by == By::TRANSACTION ?  Constants::DETAILS_TRANSACTION_URI : Constants::DETAILS_ORDER_URI;
+            $url .= $by === By::TRANSACTION ? Constants::DETAILS_TRANSACTION_URI : Constants::DETAILS_ORDER_URI;
 
-            $res = $this->_client->post($url, [
+            $res = $this->getClient()->request('POST', $url, [
                 'headers' => $this->_getHeaders(),
                 'json' => [
                     "{$by}Id" => $identifier,
-                ]
+                ],
             ]);
 
-            return  PaymentDetails::fromResponse($res);
+            return TransactionDetails::fromResponse($res);
         } catch (\GuzzleHttp\Exception\ClientException $e) {
-            throw new MoncashException(
-                $e->getResponse()->getBody()->getContents()
-            );
+            throw new ApiException($e->getResponse()->getBody()->getContents(), $e->getCode(), $e);
         }
     }
 }

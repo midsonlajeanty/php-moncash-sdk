@@ -1,58 +1,45 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mds\Moncash\Core;
 
-use Mds\Moncash\Exception\MoncashException;
+use Mds\Moncash\Exception\InvalidConfigException;
+use Mds\Moncash\Exception\InvalidPaymentRequestException;
 
 trait Validation
 {
-
-
     /**
      * _validateCredentials
      *
-     * @param  string $clientId User Client Id provided by Moncash
-     * @param  string $clientSecret User Client Secret provided by Moncash
-     * @param  string $debug Mode of use, `true` for development and `false` for production
-     * 
-     * @throws MoncashException 
+     * @param  string  $clientId  User Client Id provided by Moncash
+     * @param  string  $clientSecret  User Client Secret provided by Moncash
+     *
+     * @throws InvalidConfigException
      */
-    protected function _validateCredentials(string $clientId, string $clientSecret, bool $debug)
+    protected function _validateCredentials(string $clientId, string $clientSecret): void
     {
-        if (empty($clientId) || empty($clientSecret)) {
-            throw new MoncashException("'clientId' and 'clientSecret' must be provided");
-        }
-
-        if (!is_string($clientId) || !is_string($clientSecret)) {
-            throw new MoncashException("'clientId' and 'clientSecret' must be string");
-        }
-
-        if (!is_bool($debug)) {
-            throw new MoncashException("'debug' must be boolean");
+        if ($clientId === '' || $clientId === '0' || ($clientSecret === '' || $clientSecret === '0')) {
+            throw new InvalidConfigException("'clientId' and 'clientSecret' must be provided");
         }
     }
-
 
     /**
      * _validatePaymentPayload
      *
-     * @param  string $orderId Order Id
-     * @param  float|int $amount Amount to be paid
-     * 
-     * @throws MoncashException
+     * @param  string  $orderId  Order Id
+     * @param  float  $amount  Amount to be paid
+     *
+     * @throws InvalidPaymentRequestException
      */
-    protected function _validatePaymentPayload(string $orderId, $amount)
+    protected function _validatePaymentPayload(string $orderId, float $amount): void
     {
-        if (empty($orderId) || empty($amount)) {
-            throw new MoncashException("'orderId' and 'amount' must be provided");
+        if ($orderId === '' || $orderId === '0') {
+            throw new InvalidPaymentRequestException("'orderId' must be provided");
         }
 
-        if (!is_numeric($amount)) {
-            throw new MoncashException("'amount' must be a number");
-        }
-
-        if ($amount < 0) {
-            throw new MoncashException("'amount' must be greater than 0");
+        if ($amount <= 0) {
+            throw new InvalidPaymentRequestException("'amount' must be greater than 0");
         }
     }
 }

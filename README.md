@@ -67,6 +67,22 @@ $details = $moncash->getPaymentDetailsByTransactionId('TRANSACTION_ID');
 $details = $moncash->getPaymentDetailsByOrderId('ORDER_ID');
 ```
 
+## Common conventions (MonCash & NatCash)
+
+The MonCash and NatCash SDKs share the same pattern. Anyone familiar with one will feel at home with the other:
+
+| Step | Class / method |
+|---|---|
+| Configuration | `new Config($clientId, $clientSecret)` |
+| Instantiation | `new <Gateway>($config, $debug = true)` |
+| Request | `new PaymentRequest($orderId, $amount)` |
+| Payment | `makePayment(PaymentRequest): PaymentResponse` |
+| Redirect | `$response->getRedirect()` |
+| Details | `getTransactionDetailsByOrderId($orderId): TransactionDetails` |
+| Result | `$details->getOrderId()`, `getTransactionId()`, `getAmount()`, `getPayer()`, `isSuccessful()` |
+
+MonCash-specific: `getToken()`, `getTransactionDetailsByTransactionId()` (lookup by transaction ID).
+
 ## Contributing
 
 You have a lot of options to contribute to this project ! You can :

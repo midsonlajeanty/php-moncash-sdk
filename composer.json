@@ -15,19 +15,34 @@
     "authors": [
         {
             "name": "Louis Midson LAJEANTY",
-            "email": "dev@louismidson.me"
+            "email": "midsonlajeanty@proton.me"
         }
     ],
     "scripts": {
         "demo": "php example/cli.php",
         "serve": "php -S localhost:1234 -t example",
-        "test": "./vendor/bin/pest"
+        "refactor": "./vendor/bin/rector process",
+        "lint": "./vendor/bin/php-cs-fixer fix",
+        "test:unit": "./vendor/bin/pest",
+        "test:refactor": "./vendor/bin/rector process --dry-run",
+        "test:lint": "./vendor/bin/php-cs-fixer fix --dry-run --diff",
+        "test:types": "./vendor/bin/phpstan analyse --memory-limit=512M",
+        "test": [
+            "@test:unit",
+            "@test:refactor",
+            "@test:lint",
+            "@test:types"
+        ]
     },
     "require": {
         "php": "^7.4|^8.0",
         "guzzlehttp/guzzle": "^7.8"
     },
     "autoload": {
+        "files": [
+            "src/Payment.php",
+            "src/PaymentDetails.php"
+        ],
         "psr-4": {
             "Mds\\Moncash\\": "src/"
         }
@@ -40,8 +55,17 @@
     },
     "minimum-stability": "stable",
     "prefer-stable": true,
+    "extra": {
+        "branch-alias": {
+            "dev-main": "1.x-dev"
+        }
+    },
     "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.93",
         "mockery/mockery": "^1.6",
-        "pestphp/pest": "^1.23"
+        "pestphp/pest": "^1.23",
+        "phpstan/phpstan": "^2.1",
+        "phpstan/phpstan-mockery": "^2.0",
+        "rector/rector": "^2.3"
     }
 }

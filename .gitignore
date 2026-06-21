@@ -7,3 +7,6 @@ Thumbs.db
 /.fleet
 /.vscode
 .phpunit.result.cache
+.php-cs-fixer.cache
+/composer.lock
+/example/constant.php

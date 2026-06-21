@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Mds\Moncash;
 
 /**
@@ -8,6 +10,6 @@ namespace Mds\Moncash;
  */
 class By
 {
-    const TRANSACTION = "transaction";
-    const ORDER = "order";
+    public const TRANSACTION = "transaction";
+    public const ORDER = "order";
 }

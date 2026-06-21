@@ -1,29 +1,34 @@
 <?php
 
-require '../vendor/autoload.php';
+declare(strict_types=1);
 
-require 'constant.php';
+require dirname(__DIR__) . '/vendor/autoload.php';
+
+require __DIR__ . '/constant.php';
 
 
+use Mds\Moncash\Config;
 use Mds\Moncash\Moncash;
 
 if (isset($_GET['transactionId'])) {
 
-    $transactionId = $_GET['transactionId'];
+    $transactionId = (string) $_GET['transactionId'];
 
-    // Create Moncash Instance
-    $moncash = new Moncash(CLIENT_ID, CLIENT_SECRET);
+    // Create Config and Moncash instance
+    $config = new Config(CLIENT_ID, CLIENT_SECRET);
+    $moncash = new Moncash($config); // pass false as second arg for production
 
-    // Retrieve Transaction by transactionId
+    // Retrieve transaction details by transactionId
     try {
-        $payment = $moncash->getPaymentDetailsByTransactionId($transactionId);
+        $payment = $moncash->getTransactionDetailsByTransactionId($transactionId);
     } catch (\Exception $e) {
         $errors = $e->getMessage();
     }
 } else {
-    // redirect to hone
-    header("Location: /");
+    // No transactionId provided — redirect to home
+    header('Location: /');
     http_response_code(302);
+    exit;
 }
 
 ?>
@@ -38,9 +43,9 @@ if (isset($_GET['transactionId'])) {
 
     <title>Moncash SDK - Demo</title>
 
-    <link rel="stylesheet" 
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" 
-        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" 
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
         crossorigin="anonymous"
     >
     <link rel="stylesheet" href="style.css">
@@ -85,8 +90,8 @@ if (isset($_GET['transactionId'])) {
 
                                 <tr>
                                     <td class="text-center align-middle p-4">
-                                        <span>Cost : </span>
-                                        <span><?= $payment->getCost() ?></span>
+                                        <span>Amount : </span>
+                                        <span><?= $payment->getAmount() ?></span>
                                     </td>
                                 </tr>
 
@@ -112,15 +117,15 @@ if (isset($_GET['transactionId'])) {
         <?php endif; ?>
     </div>
 
-    <script 
-        src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" 
-        integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" 
+    <script
+        src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+        integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
         crossorigin="anonymous">
     </script>
 
-    <script 
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js" 
-        integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD" 
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"
+        integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD"
         crossorigin="anonymous">
     </script>
 

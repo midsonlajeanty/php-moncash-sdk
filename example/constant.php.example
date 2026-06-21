@@ -1,0 +1,10 @@
+<?php
+
+declare(strict_types=1);
+
+// Example credentials file.
+// Copy this file to `constant.php` and fill in your real Moncash credentials.
+// `constant.php` is gitignored, so your real credentials are never committed.
+
+const CLIENT_ID = '<YOUR_CLIENT_ID>';
+const CLIENT_SECRET = '<YOUR_CLIENT_SECRET>';
