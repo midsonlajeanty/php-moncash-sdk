@@ -8,10 +8,8 @@ use Mds\Moncash\Exception\InvalidConfigException;
 
 /**
  * Payment Configuration
- *
- * @final
  */
-class Config
+final class Config
 {
     /**
      * clientId - Client Id

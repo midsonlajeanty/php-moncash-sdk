@@ -6,9 +6,8 @@ namespace Mds\Moncash\Core;
 
 /**
  * Constants
- * @final
  */
-class Constants
+final class Constants
 {
     public const LIVE_URL = "https://moncashbutton.digicelgroup.com/Api";
     public const SANDBOX_URL = "https://sandbox.moncashbutton.digicelgroup.com/Api";

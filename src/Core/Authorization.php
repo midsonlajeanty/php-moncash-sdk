@@ -6,10 +6,8 @@ namespace Mds\Moncash\Core;
 
 /**
  * Authorization
- *
- * @final
  */
-class Authorization
+final class Authorization
 {
     /**
      * @var string Moncash Access Token

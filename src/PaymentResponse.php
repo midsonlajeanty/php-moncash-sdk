@@ -6,7 +6,7 @@ namespace Mds\Moncash;
 
 use Mds\Moncash\Core\Constants;
 
-class PaymentResponse
+final class PaymentResponse
 {
     /**
      * orderId - Order Id provided by your app.

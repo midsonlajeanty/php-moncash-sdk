@@ -6,9 +6,8 @@ namespace Mds\Moncash;
 
 /**
  * PaymentDetailBy
- * @final
  */
-class By
+final class By
 {
     public const TRANSACTION = "transaction";
     public const ORDER = "order";

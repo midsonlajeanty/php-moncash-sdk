@@ -6,7 +6,7 @@ namespace Mds\Moncash;
 
 use Mds\Moncash\Core\PaymentStatus;
 
-class TransactionDetails
+final class TransactionDetails
 {
     /**
      * orderId - OrderId provided by your app.
