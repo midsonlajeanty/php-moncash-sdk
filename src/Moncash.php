@@ -16,7 +16,7 @@ use Mds\Moncash\Exception\ApiException;
  * @license MIT
  * @author Mds <midsonlajeanty@proton.me>
  */
-final class Moncash extends Core
+final class Moncash extends Core implements MoncashInterface
 {
     /**
      * __construct - Create a new Moncash instance
