@@ -83,6 +83,37 @@ The MonCash and NatCash SDKs share the same pattern. Anyone familiar with one wi
 
 MonCash-specific: `getToken()`, `getTransactionDetailsByTransactionId()` (lookup by transaction ID).
 
+## Testing
+
+The `Moncash` facade is `final` (it is the only class that performs I/O), so it cannot be mocked directly. Instead, type-hint your application code against `MoncashInterface` and mock the interface:
+
+```php
+use Mds\Moncash\MoncashInterface;
+
+final class CheckoutService
+{
+    public function __construct(private MoncashInterface $gateway) {}
+
+    public function pay(PaymentRequest $request): PaymentResponse
+    {
+        return $this->gateway->makePayment($request);
+    }
+}
+
+// Production: inject the real facade.
+new CheckoutService(new Moncash(new Config('clientId', 'clientSecret')));
+```
+
+```php
+// Test: mock the interface, no need to hit the network.
+$gateway = Mockery::mock(MoncashInterface::class);
+$gateway->shouldReceive('makePayment')->once()->andReturn($fakeResponse);
+
+$service = new CheckoutService($gateway);
+```
+
+Value objects (`Config`, `PaymentRequest`, `PaymentResponse`, `TransactionDetails`) are also `final` — don't mock them, just construct them with test data.
+
 ## Contributing
 
 You have a lot of options to contribute to this project ! You can :
