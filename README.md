@@ -85,7 +85,7 @@ MonCash-specific: `getToken()`, `getTransactionDetailsByTransactionId()` (lookup
 
 ## Testing
 
-The `Moncash` facade is `final` (it is the only class that performs I/O), so it cannot be mocked directly. Instead, type-hint your application code against `MoncashInterface` and mock the interface:
+The `Moncash` gateway is `final` (it is the only class that performs I/O), so it cannot be mocked directly. Instead, type-hint your application code against `MoncashInterface` and mock the interface:
 
 ```php
 use Mds\Moncash\MoncashInterface;
@@ -100,7 +100,7 @@ final class CheckoutService
     }
 }
 
-// Production: inject the real facade.
+// Production: inject the real gateway.
 new CheckoutService(new Moncash(new Config('clientId', 'clientSecret')));
 ```
 

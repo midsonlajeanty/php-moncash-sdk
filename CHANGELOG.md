@@ -11,12 +11,12 @@ All notable changes to this project will be documented in this file.
 - `PaymentStatus` constants; injectable Guzzle client (`getClient()`/`setClient()`); lazy OAuth authorization.
 - Tooling: PHPStan level 6, Rector, PHP-CS-Fixer; `analyse`/`format`/`lint`/`refactor` scripts; enriched CI pipeline.
 - `declare(strict_types=1)` + typed properties + return types throughout.
-- `MoncashInterface`, the public contract implemented by the `Moncash` facade, so consumers can type-hint it and mock the gateway in tests.
+- `MoncashInterface`, the public contract implemented by the `Moncash` gateway, so consumers can type-hint it and mock it in tests.
 
 ### Changed
 - `new Moncash(Config, debug)` is the standard constructor signature; `makePayment(PaymentRequest)` returns `PaymentResponse`.
 - `Payment` → `PaymentResponse`; `PaymentDetails` → `TransactionDetails` (aliases preserved for backward compatibility).
-- Value objects (`Config`, `PaymentRequest`, `PaymentResponse`, `TransactionDetails`), the `Moncash` facade and the helper classes (`Constants`, `PaymentStatus`, `By`, `Authorization`) are now `final` (previously documented `@final` only). Mock `MoncashInterface` instead of the facade; construct value objects directly.
+- Value objects (`Config`, `PaymentRequest`, `PaymentResponse`, `TransactionDetails`), the `Moncash` gateway and the helper classes (`Constants`, `PaymentStatus`, `By`, `Authorization`) are now `final` (previously documented `@final` only). Mock `MoncashInterface` instead of the gateway; construct value objects directly.
 
 ### Deprecated
 - `new Moncash(clientId, clientSecret, debug)`; `makePayment(orderId, amount)`.
