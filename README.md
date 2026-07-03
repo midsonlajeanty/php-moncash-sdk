@@ -83,6 +83,43 @@ The MonCash and NatCash SDKs share the same pattern. Anyone familiar with one wi
 
 MonCash-specific: `getToken()`, `getTransactionDetailsByTransactionId()` (lookup by transaction ID).
 
+## Laravel
+
+The package auto-registers a service provider and a facade (Laravel 9 to 13). Publish the config file:
+
+```bash
+php artisan vendor:publish --tag=moncash-config
+```
+
+Set your credentials in `.env` (they are loaded automatically):
+
+```dotenv
+MONCASH_CLIENT_ID=your-client-id
+MONCASH_CLIENT_SECRET=your-client-secret
+# Sandbox gateway. Defaults to false (live); set true in local environments.
+MONCASH_DEBUG=true
+```
+
+Then use the facade, or inject `MoncashInterface` (both resolve the same configured singleton):
+
+```php
+use Mds\Moncash\Laravel\Facades\Moncash;
+use Mds\Moncash\PaymentRequest;
+
+$response = Moncash::makePayment(new PaymentRequest('order-1', 250.0));
+
+return redirect($response->getRedirect());
+```
+
+```php
+use Mds\Moncash\MoncashInterface;
+
+final class CheckoutController
+{
+    public function __construct(private MoncashInterface $moncash) {}
+}
+```
+
 ## Testing
 
 The `Moncash` gateway is `final` (it is the only class that performs I/O), so it cannot be mocked directly. Instead, type-hint your application code against `MoncashInterface` and mock the interface:
