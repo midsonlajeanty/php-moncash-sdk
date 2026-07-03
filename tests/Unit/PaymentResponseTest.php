@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Mds\Moncash\Core\Constants;
-use Mds\Moncash\Payment;
 use Mds\Moncash\PaymentResponse;
 
 test('payment response object test', function (): void {
@@ -15,10 +14,4 @@ test('payment response object test', function (): void {
     expect($response->getToken())->toBe('abc123');
     expect($response->getExpiresAt())->toBe($expireAt);
     expect($response->getRedirect())->toBe('https://example.com/'.Constants::REDIRECT_URI.'abc123');
-});
-
-test('Payment alias still resolves to PaymentResponse', function (): void {
-    expect(class_exists(Payment::class))->toBeTrue();
-    $payment = new Payment('1', 1.0, 't', new DateTime, 'https://g/');
-    expect($payment)->toBeInstanceOf(PaymentResponse::class);
 });

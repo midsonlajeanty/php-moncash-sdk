@@ -9,7 +9,7 @@ use Psr\Http\Message\ResponseInterface;
 /**
  * Authorization
  */
-final class Authorization
+final readonly class Authorization
 {
     /**
      * @var string Moncash Access Token

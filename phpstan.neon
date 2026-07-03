@@ -9,5 +9,5 @@ parameters:
     level: 6
 
     phpVersion:
-        min: 70400
+        min: 80200
         max: 80500

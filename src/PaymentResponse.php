@@ -6,33 +6,8 @@ namespace Mds\Moncash;
 
 use Mds\Moncash\Core\Constants;
 
-final class PaymentResponse
+final readonly class PaymentResponse
 {
-    /**
-     * orderId - Order Id provided by your app.
-     */
-    private string $orderId;
-
-    /**
-     * amount - Amount to be paid.
-     */
-    private float $amount;
-
-    /**
-     * token - Token provided by Moncash.
-     */
-    private string $token;
-
-    /**
-     * expireAt - Expiration Date of the Token.
-     */
-    private \DateTime $expireAt;
-
-    /**
-     * gateway - Gateway Url.
-     */
-    private string $gateway;
-
     /**
      * @param  string  $orderId  Order Id provided by your app
      * @param  float  $amount  Amount to be paid
@@ -40,19 +15,7 @@ final class PaymentResponse
      * @param  \DateTime  $expireAt  Expiration Date of the Token
      * @param  string  $gateway  Gateway Url
      */
-    public function __construct(
-        string $orderId,
-        float $amount,
-        string $token,
-        \DateTime $expireAt,
-        string $gateway
-    ) {
-        $this->orderId = $orderId;
-        $this->amount = $amount;
-        $this->token = $token;
-        $this->expireAt = $expireAt;
-        $this->gateway = $gateway;
-    }
+    public function __construct(private string $orderId, private float $amount, private string $token, private \DateTime $expireAt, private string $gateway) {}
 
     /**
      * getOrderId - Get Order Id
@@ -95,20 +58,6 @@ final class PaymentResponse
     }
 
     /**
-     * getExpireAt - Deprecated, use getExpiresAt() instead
-     *
-     * @return \DateTime Expiration Date of the Token
-     *
-     * @deprecated Use getExpiresAt() instead.
-     */
-    public function getExpireAt(): \DateTime
-    {
-        @trigger_error('getExpireAt() is deprecated, use getExpiresAt() instead.', E_USER_DEPRECATED);
-
-        return $this->getExpiresAt();
-    }
-
-    /**
      * getRedirect - Get Redirect Url
      *
      * @return string Redirect Url to Moncash Payment Gateway
@@ -118,5 +67,3 @@ final class PaymentResponse
         return $this->gateway.Constants::REDIRECT_URI.$this->getToken();
     }
 }
-
-\class_alias(PaymentResponse::class, Payment::class);

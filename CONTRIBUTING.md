@@ -12,7 +12,7 @@ For security vulnerabilities, see [SECURITY.md](.github/SECURITY.md); **never** 
 
 ## Development Setup
 
-Requires PHP 7.4+ and Composer 2.
+Requires PHP 8.2+ and Composer 2.
 
 ```bash
 git clone https://github.com/midsonlajeanty/php-moncash-sdk.git
@@ -46,7 +46,7 @@ composer lint            # apply code style fixes
 composer refactor        # apply Rector refactorings
 ```
 
-> **Note:** the library targets **PHP 7.4 – 8.5** at runtime, but the dev/test tooling (Rector, PHPStan, Pest 1.x) requires **PHP 8.1+**. Run `composer test` on PHP **8.1 – 8.3** (8.4+ breaks Pest 1.x). CI runs the full suite on `8.1`/`8.2`/`8.3` and a runtime compatibility job (`--no-dev` install + lint + smoke-load) on `7.4`/`8.0`/`8.4`/`8.5`; PHPStan's `phpVersion` range additionally checks the source for **7.4 – 8.5**.
+> **Note:** the library targets **PHP 8.2 – 8.5** at runtime. CI runs the full suite (`composer test`) across a Laravel matrix (PHP **8.2 – 8.4** × Laravel **12/13**) and a runtime-compatibility job (`--no-dev` install + lint + smoke-load) on PHP **8.2 – 8.5**. Projects on PHP < 8.2 should use the `1.x` line.
 
 ## Coding Standards
 

@@ -18,11 +18,6 @@ abstract class Core
     use Validation;
 
     /**
-     * config - Moncash Config Object
-     */
-    private Config $config;
-
-    /**
      * authorization - Lazy-loaded Authorization (OAuth token)
      */
     private ?Authorization $authorization = null;
@@ -52,9 +47,8 @@ abstract class Core
      * @param  Config  $config  Moncash Config Object
      * @param  bool  $debug  `true` for development (sandbox), `false` for production
      */
-    public function __construct(Config $config, bool $debug = true)
+    public function __construct(private Config $config, bool $debug = true)
     {
-        $this->config = $config;
         $this->setConfig($debug);
         $this->_client = new Client;
     }

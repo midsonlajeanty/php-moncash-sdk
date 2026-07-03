@@ -6,31 +6,22 @@ namespace Mds\Moncash;
 
 use Mds\Moncash\Exception\InvalidPaymentRequestException;
 
-final class PaymentRequest
+final readonly class PaymentRequest
 {
-    /**
-     * orderId - Order Id
-     *
-     * @var string Order Id provided by your app
-     */
-    private string $orderId;
-
-    /**
-     * amount - Amount
-     *
-     * @var float Amount to be paid
-     */
-    private float $amount;
-
     /**
      * @param  string  $orderId  Order Id provided by your app
      * @param  float  $amount  Amount to be paid
      */
-    public function __construct(string $orderId, float $amount)
-    {
-        $this->orderId = $orderId;
-        $this->amount = $amount;
-    }
+    public function __construct(
+        /**
+         * orderId - Order Id
+         */
+        private string $orderId,
+        /**
+         * amount - Amount
+         */
+        private float $amount
+    ) {}
 
     /**
      * from - Create a new PaymentRequest instance from Array
@@ -58,21 +49,6 @@ final class PaymentRequest
             (string) $payment['orderId'],
             (float) $payment['amount']
         );
-    }
-
-    /**
-     * fromArray - Deprecated, use from() instead
-     *
-     * @param  array<string, mixed>  $payment  Payment Request Array
-     * @return PaymentRequest PaymentRequest Object
-     *
-     * @deprecated Use PaymentRequest::from() instead.
-     */
-    public static function fromArray(array $payment): PaymentRequest
-    {
-        @trigger_error('PaymentRequest::fromArray() is deprecated, use PaymentRequest::from() instead.', E_USER_DEPRECATED);
-
-        return self::from($payment);
     }
 
     /**

@@ -35,14 +35,10 @@
         ]
     },
     "require": {
-        "php": "^7.4|^8.0",
+        "php": "^8.2",
         "guzzlehttp/guzzle": "^7.8"
     },
     "autoload": {
-        "files": [
-            "src/Payment.php",
-            "src/PaymentDetails.php"
-        ],
         "psr-4": {
             "Mds\\Moncash\\": "src/"
         }
@@ -61,7 +57,7 @@
     "minimum-stability": "stable",
     "prefer-stable": true,
     "suggest": {
-        "illuminate/support": "Enables the auto-discovered Laravel service provider and the Moncash facade (Laravel 9 to 13)."
+        "illuminate/support": "Enables the auto-discovered Laravel service provider and the Moncash facade (Laravel 12 and 13)."
     },
     "extra": {
         "branch-alias": {

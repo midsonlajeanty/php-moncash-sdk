@@ -21,69 +21,27 @@ use Psr\Http\Message\ResponseInterface;
 final class Moncash extends Core implements MoncashInterface
 {
     /**
-     * __construct - Create a new Moncash instance
-     *
-     * Standard usage:
-     *   $moncash = new Moncash(new Config('clientId', 'clientSecret'), true);
-     *
-     * Deprecated usage (still supported):
-     *   $moncash = new Moncash('clientId', 'clientSecret', true);
-     *
-     * @param  Config|string  $config  Config object (standard) or clientId (deprecated)
-     * @param  bool|string  $secretOrDebug  debug flag (standard) or clientSecret (deprecated)
-     * @param  bool  $debug  Deprecated mode only
-     */
-    public function __construct($config, $secretOrDebug = true, bool $debug = true)
-    {
-        if ($config instanceof Config) {
-            $resolvedConfig = $config;
-            $resolvedDebug = is_bool($secretOrDebug) ? $secretOrDebug : true;
-        } else {
-            @trigger_error(
-                'Passing clientId/clientSecret to Moncash::__construct() is deprecated, use Mds\Moncash\Config instead.',
-                E_USER_DEPRECATED
-            );
-            $this->_validateCredentials((string) $config, (string) $secretOrDebug);
-            $resolvedConfig = new Config((string) $config, (string) $secretOrDebug);
-            $resolvedDebug = $debug;
-        }
-
-        parent::__construct($resolvedConfig, $resolvedDebug);
-    }
-
-    /**
      * makePayment - Process Payment
      *
-     * @param  PaymentRequest|string  $request  PaymentRequest (standard) or orderId (deprecated)
-     * @param  float|null  $amount  Amount (deprecated mode only)
+     * @param  PaymentRequest  $request  Payment request object
      * @return PaymentResponse Payment Response Object with redirect URL
      *
      * @throws ApiException
      */
-    public function makePayment($request, $amount = null): PaymentResponse
+    public function makePayment(PaymentRequest $request): PaymentResponse
     {
-        if ($request instanceof PaymentRequest) {
-            $paymentRequest = $request;
-        } else {
-            @trigger_error(
-                'Passing orderId/amount to makePayment() is deprecated, use Mds\Moncash\PaymentRequest instead.',
-                E_USER_DEPRECATED
-            );
-            $paymentRequest = new PaymentRequest((string) $request, (float) $amount);
-        }
-
-        $this->_validatePaymentPayload($paymentRequest->getOrderId(), $paymentRequest->getAmount());
+        $this->_validatePaymentPayload($request->getOrderId(), $request->getAmount());
 
         try {
             $res = $this->getClient()->request('POST', $this->_endpoint.Constants::PAYMENT_URI, [
                 'headers' => $this->_getHeaders(),
                 'json' => [
-                    'orderId' => $paymentRequest->getOrderId(),
-                    'amount' => $paymentRequest->getAmount(),
+                    'orderId' => $request->getOrderId(),
+                    'amount' => $request->getAmount(),
                 ],
             ]);
 
-            return $this->_createPayment($paymentRequest, $res);
+            return $this->_createPayment($request, $res);
         } catch (ClientException $e) {
             throw new ApiException($e->getResponse()->getBody()->getContents(), $e->getCode(), $e);
         }
@@ -114,30 +72,6 @@ final class Moncash extends Core implements MoncashInterface
     }
 
     /**
-     * getPaymentDetailsByOrderId - Deprecated, use getTransactionDetailsByOrderId() instead
-     *
-     * @deprecated Use getTransactionDetailsByOrderId() instead.
-     */
-    public function getPaymentDetailsByOrderId(string $orderId): TransactionDetails
-    {
-        @trigger_error('getPaymentDetailsByOrderId() is deprecated, use getTransactionDetailsByOrderId() instead.', E_USER_DEPRECATED);
-
-        return $this->getTransactionDetailsByOrderId($orderId);
-    }
-
-    /**
-     * getPaymentDetailsByTransactionId - Deprecated, use getTransactionDetailsByTransactionId() instead
-     *
-     * @deprecated Use getTransactionDetailsByTransactionId() instead.
-     */
-    public function getPaymentDetailsByTransactionId(string $transactionId): TransactionDetails
-    {
-        @trigger_error('getPaymentDetailsByTransactionId() is deprecated, use getTransactionDetailsByTransactionId() instead.', E_USER_DEPRECATED);
-
-        return $this->getTransactionDetailsByTransactionId($transactionId);
-    }
-
-    /**
      * _createPayment - Build PaymentResponse from the API response
      *
      * @throws ApiException
@@ -147,7 +81,7 @@ final class Moncash extends Core implements MoncashInterface
         $data = json_decode((string) $res->getBody());
 
         $expired = new \DateTime;
-        $expired->setTimestamp((int) strtotime($data->payment_token->expired));
+        $expired->setTimestamp((int) strtotime((string) $data->payment_token->expired));
 
         return new PaymentResponse(
             $request->getOrderId(),

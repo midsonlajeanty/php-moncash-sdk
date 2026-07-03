@@ -7,7 +7,7 @@ namespace Mds\Moncash;
 use Mds\Moncash\Core\PaymentStatus;
 use Psr\Http\Message\ResponseInterface;
 
-final class TransactionDetails
+final readonly class TransactionDetails
 {
     /**
      * orderId - OrderId provided by your app.
@@ -90,20 +90,6 @@ final class TransactionDetails
     }
 
     /**
-     * getCost - Deprecated, use getAmount() instead
-     *
-     * @return float Amount paid by the payer
-     *
-     * @deprecated Use getAmount() instead.
-     */
-    public function getCost(): float
-    {
-        @trigger_error('getCost() is deprecated, use getAmount() instead.', E_USER_DEPRECATED);
-
-        return $this->getAmount();
-    }
-
-    /**
      * getPayer - Get Payer
      *
      * @return string Payer's phone number
@@ -149,5 +135,3 @@ final class TransactionDetails
         ];
     }
 }
-
-\class_alias(TransactionDetails::class, PaymentDetails::class);

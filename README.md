@@ -29,42 +29,53 @@ Minimum SDK to process payment with Digicel Moncash Payment Gateway
 
 ## Getting started
 
+Requires **PHP 8.2+**.
+
 ```
-composer require midsonlajeanty/php-moncash-sdk 
+composer require midsonlajeanty/php-moncash-sdk
 ```
+
+> **On PHP < 8.2?** Pin the 1.x line, which supports PHP 7.4+:
+> ```
+> composer require "midsonlajeanty/php-moncash-sdk:^1.0"
+> ```
 
 ## Usage
 
 ### Init Payment and get Payment URL  (Moncash Checkout)
 
 ```php
-// Init Payment
+use Mds\Moncash\Config;
 use Mds\Moncash\Moncash;
+use Mds\Moncash\PaymentRequest;
 
-// Create Moncash Instance
-$moncash = new Moncash(CLIENT_ID, CLIENT_SECRET);
+// Moncash Merchant Credentials
+$config = new Config(CLIENT_ID, CLIENT_SECRET);
 
-// Make Paiment with OrderId and Amount
-$payment = $moncash->makePayment('ORDER-001', 100);
+// Init SDK with config
+$moncash = new Moncash($config, DEBUG);
+
+// Make Payment with a payment request
+$response = $moncash->makePayment(new PaymentRequest('ORDER-001', 100));
 
 // Get Payment URL  (Moncash Checkout)
-$payment->getRedirect();
+$response->getRedirect();
 ```
 
 ### Get Transaction Details by Transaction and Order ID
 
 ```php
-// Init Payment
+use Mds\Moncash\Config;
 use Mds\Moncash\Moncash;
 
-// Create Moncash Instance
-$moncash = new Moncash(CLIENT_ID, CLIENT_SECRET);
+// Create Moncash instance
+$moncash = new Moncash(new Config(CLIENT_ID, CLIENT_SECRET));
 
-// Get Payment Details with TransactionId provided by Moncash.
-$details = $moncash->getPaymentDetailsByTransactionId('TRANSACTION_ID');
+// Get Transaction Details with TransactionId provided by Moncash.
+$details = $moncash->getTransactionDetailsByTransactionId('TRANSACTION_ID');
 
-// Get Payment Details with OrderId provided by your app.
-$details = $moncash->getPaymentDetailsByOrderId('ORDER_ID');
+// Get Transaction Details with OrderId provided by your app.
+$details = $moncash->getTransactionDetailsByOrderId('ORDER_ID');
 ```
 
 ## Common conventions (MonCash & NatCash)

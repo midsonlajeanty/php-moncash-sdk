@@ -17,17 +17,20 @@ All notable changes to this project will be documented in this file.
 - Laravel integration (Laravel 9 to 13): auto-discovered `MoncashServiceProvider`, a `Moncash` facade, and a publishable `config/moncash.php` driven by `MONCASH_*` environment variables. The core SDK stays framework-agnostic; the Laravel layer is opt-in.
 
 ### Changed
-- `new Moncash(Config, debug)` is the standard constructor signature; `makePayment(PaymentRequest)` returns `PaymentResponse`.
-- `Payment` → `PaymentResponse`; `PaymentDetails` → `TransactionDetails` (aliases preserved for backward compatibility).
-- Value objects (`Config`, `PaymentRequest`, `PaymentResponse`, `TransactionDetails`), the `Moncash` gateway and the helper classes (`Constants`, `PaymentStatus`, `By`, `Authorization`) are now `final` (previously documented `@final` only). Mock `MoncashInterface` instead of the gateway; construct value objects directly.
-- Dev tooling: replaced PHP-CS-Fixer with Laravel Pint, added Larastan next to PHPStan, and upgraded the test stack to Pest 3 + Testbench. CI now runs a Laravel matrix (PHP 8.2–8.4 × Laravel 11–13) plus a runtime-compatibility job (PHP 7.4–8.5).
+- **Raised the minimum PHP version to 8.2.** Projects on PHP < 8.2 should stay on the [1.x line](https://github.com/midsonlajeanty/php-moncash-sdk/tree/main) (`composer require "midsonlajeanty/php-moncash-sdk:^1.0"`).
+- `new Moncash(Config, debug)` is the constructor signature; `makePayment(PaymentRequest)` returns `PaymentResponse`.
+- `Payment` → `PaymentResponse`; `PaymentDetails` → `TransactionDetails`.
+- Value objects (`Config`, `PaymentRequest`, `PaymentResponse`, `TransactionDetails`), the `Moncash` gateway and the helper classes (`Constants`, `PaymentStatus`, `By`, `Authorization`) are now `final` (value objects are `final readonly`). Mock `MoncashInterface` instead of the gateway; construct value objects directly.
+- Dev tooling: replaced PHP-CS-Fixer with Laravel Pint, added Larastan next to PHPStan, and upgraded the test stack to Pest 3 + Testbench. CI now runs a Laravel matrix (PHP 8.2–8.4 × Laravel 12–13) plus a runtime-compatibility job (PHP 8.2–8.5).
 
-### Deprecated
-- `new Moncash(clientId, clientSecret, debug)`; `makePayment(orderId, amount)`.
-- `getPaymentDetailsByOrderId()`/`getPaymentDetailsByTransactionId()` → `getTransactionDetailsBy*()`.
-- `TransactionDetails::getCost()` → `getAmount()`; `PaymentResponse::getExpireAt()` → `getExpiresAt()`.
-- Classes `Mds\Moncash\Payment` and `Mds\Moncash\PaymentDetails`.
-- `Config::fromArray()` → `Config::from()`; `PaymentRequest::fromArray()` → `PaymentRequest::from()`.
+### Removed
+- **Backward-compatibility shims removed** (they were never part of a documented stable release). Migrate as follows:
+  - `new Moncash(clientId, clientSecret, debug)` → `new Moncash(new Config(clientId, clientSecret), debug)`.
+  - `makePayment(orderId, amount)` → `makePayment(new PaymentRequest(orderId, amount))`.
+  - `getPaymentDetailsByOrderId()`/`getPaymentDetailsByTransactionId()` → `getTransactionDetailsBy*()`.
+  - `TransactionDetails::getCost()` → `getAmount()`; `PaymentResponse::getExpireAt()` → `getExpiresAt()`.
+  - Classes `Mds\Moncash\Payment` and `Mds\Moncash\PaymentDetails` → `PaymentResponse` / `TransactionDetails`.
+  - `Config::fromArray()` → `Config::from()`; `PaymentRequest::fromArray()` → `PaymentRequest::from()`.
 
 ### Fixed
 - Expiration date construction (`DateTime::setTimestamp()` instead of passing a `strtotime()` result to the constructor).
