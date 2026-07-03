@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Mds\Moncash;
 
-use Mds\Moncash\Core\Core;
+use GuzzleHttp\Exception\ClientException;
 use Mds\Moncash\Core\Constants;
+use Mds\Moncash\Core\Core;
 use Mds\Moncash\Exception\ApiException;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Moncash
@@ -73,7 +75,7 @@ final class Moncash extends Core implements MoncashInterface
         $this->_validatePaymentPayload($paymentRequest->getOrderId(), $paymentRequest->getAmount());
 
         try {
-            $res = $this->getClient()->request('POST', $this->_endpoint . Constants::PAYMENT_URI, [
+            $res = $this->getClient()->request('POST', $this->_endpoint.Constants::PAYMENT_URI, [
                 'headers' => $this->_getHeaders(),
                 'json' => [
                     'orderId' => $paymentRequest->getOrderId(),
@@ -82,7 +84,7 @@ final class Moncash extends Core implements MoncashInterface
             ]);
 
             return $this->_createPayment($paymentRequest, $res);
-        } catch (\GuzzleHttp\Exception\ClientException $e) {
+        } catch (ClientException $e) {
             throw new ApiException($e->getResponse()->getBody()->getContents(), $e->getCode(), $e);
         }
     }
@@ -140,11 +142,11 @@ final class Moncash extends Core implements MoncashInterface
      *
      * @throws ApiException
      */
-    private function _createPayment(PaymentRequest $request, \Psr\Http\Message\ResponseInterface $res): PaymentResponse
+    private function _createPayment(PaymentRequest $request, ResponseInterface $res): PaymentResponse
     {
         $data = json_decode((string) $res->getBody());
 
-        $expired = new \DateTime();
+        $expired = new \DateTime;
         $expired->setTimestamp((int) strtotime($data->payment_token->expired));
 
         return new PaymentResponse(
@@ -175,7 +177,7 @@ final class Moncash extends Core implements MoncashInterface
             ]);
 
             return TransactionDetails::fromResponse($res);
-        } catch (\GuzzleHttp\Exception\ClientException $e) {
+        } catch (ClientException $e) {
             throw new ApiException($e->getResponse()->getBody()->getContents(), $e->getCode(), $e);
         }
     }

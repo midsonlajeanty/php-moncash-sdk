@@ -22,11 +22,11 @@
         "demo": "php example/cli.php",
         "serve": "php -S localhost:1234 -t example",
         "refactor": "./vendor/bin/rector process",
-        "lint": "./vendor/bin/php-cs-fixer fix",
+        "lint": "./vendor/bin/pint",
         "test:unit": "./vendor/bin/pest",
         "test:refactor": "./vendor/bin/rector process --dry-run",
-        "test:lint": "./vendor/bin/php-cs-fixer fix --dry-run --diff",
-        "test:types": "./vendor/bin/phpstan analyse --memory-limit=512M",
+        "test:lint": "./vendor/bin/pint --test",
+        "test:types": "./vendor/bin/phpstan analyse --memory-limit=1G",
         "test": [
             "@test:unit",
             "@test:refactor",
@@ -47,6 +47,11 @@
             "Mds\\Moncash\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
     "config": {
         "sort-packages": true,
         "allow-plugins": {
@@ -55,15 +60,28 @@
     },
     "minimum-stability": "stable",
     "prefer-stable": true,
+    "suggest": {
+        "illuminate/support": "Enables the auto-discovered Laravel service provider and the Moncash facade (Laravel 9 to 13)."
+    },
     "extra": {
         "branch-alias": {
             "dev-main": "1.x-dev"
+        },
+        "laravel": {
+            "providers": [
+                "Mds\\Moncash\\Laravel\\MoncashServiceProvider"
+            ],
+            "aliases": {
+                "Moncash": "Mds\\Moncash\\Laravel\\Facades\\Moncash"
+            }
         }
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^3.93",
+        "larastan/larastan": "^3.0",
+        "laravel/pint": "^1.13",
         "mockery/mockery": "^1.6",
-        "pestphp/pest": "^1.23",
+        "orchestra/testbench": "^8.0|^9.0|^10.0|^11.0",
+        "pestphp/pest": "^3.0",
         "phpstan/phpstan": "^2.1",
         "phpstan/phpstan-mockery": "^2.0",
         "rector/rector": "^2.3"

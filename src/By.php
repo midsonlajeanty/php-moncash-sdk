@@ -9,6 +9,7 @@ namespace Mds\Moncash;
  */
 final class By
 {
-    public const TRANSACTION = "transaction";
-    public const ORDER = "order";
+    public const TRANSACTION = 'transaction';
+
+    public const ORDER = 'order';
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Mds\Moncash\Core\PaymentStatus;
 use Mds\Moncash\PaymentDetails;
+use Mds\Moncash\TransactionDetails;
 
 it('legacy PaymentDetails alias still works', function (): void {
     $data = (object) [
@@ -16,7 +17,7 @@ it('legacy PaymentDetails alias still works', function (): void {
 
     $details = new PaymentDetails($data);
 
-    expect($details)->toBeInstanceOf(\Mds\Moncash\TransactionDetails::class);
+    expect($details)->toBeInstanceOf(TransactionDetails::class);
     expect($details->getOrderId())->toBe('123');
     expect($details->getCost())->toBe(100.50); // deprecated accessor, delegates to getAmount()
     expect($details->isSuccessful())->toBeTrue();

@@ -19,9 +19,9 @@ test('payment request from array', function (): void {
 });
 
 test('payment request from array invalid amount throws', function (): void {
-    expect(fn(): \Mds\Moncash\PaymentRequest => PaymentRequest::from(['orderId' => 'ORDER-3', 'amount' => 0]))->toThrow(InvalidPaymentRequestException::class);
+    expect(fn (): PaymentRequest => PaymentRequest::from(['orderId' => 'ORDER-3', 'amount' => 0]))->toThrow(InvalidPaymentRequestException::class);
 });
 
 test('payment request from array missing orderId throws', function (): void {
-    expect(fn(): \Mds\Moncash\PaymentRequest => PaymentRequest::from(['amount' => 10]))->toThrow(InvalidPaymentRequestException::class);
+    expect(fn (): PaymentRequest => PaymentRequest::from(['amount' => 10]))->toThrow(InvalidPaymentRequestException::class);
 });

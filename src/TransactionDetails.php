@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Mds\Moncash;
 
 use Mds\Moncash\Core\PaymentStatus;
+use Psr\Http\Message\ResponseInterface;
 
 final class TransactionDetails
 {
@@ -48,10 +49,10 @@ final class TransactionDetails
     /**
      * fromResponse - Create TransactionDetails Object from Response
      *
-     * @param  \Psr\Http\Message\ResponseInterface  $res  Response from Moncash
+     * @param  ResponseInterface  $res  Response from Moncash
      * @return TransactionDetails TransactionDetails Object
      */
-    public static function fromResponse(\Psr\Http\Message\ResponseInterface $res): TransactionDetails
+    public static function fromResponse(ResponseInterface $res): TransactionDetails
     {
         $data = json_decode((string) $res->getBody());
 
@@ -149,4 +150,4 @@ final class TransactionDetails
     }
 }
 
-\class_alias(TransactionDetails::class, \Mds\Moncash\PaymentDetails::class);
+\class_alias(TransactionDetails::class, PaymentDetails::class);

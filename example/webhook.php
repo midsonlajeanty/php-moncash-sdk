@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-require dirname(__DIR__) . '/vendor/autoload.php';
+require dirname(__DIR__).'/vendor/autoload.php';
 
-require __DIR__ . '/constant.php';
-
+require __DIR__.'/constant.php';
 
 use Mds\Moncash\Config;
 use Mds\Moncash\Moncash;
@@ -21,7 +20,7 @@ if (isset($_GET['transactionId'])) {
     // Retrieve transaction details by transactionId
     try {
         $payment = $moncash->getTransactionDetailsByTransactionId($transactionId);
-    } catch (\Exception $e) {
+    } catch (Exception $e) {
         $errors = $e->getMessage();
     }
 } else {
@@ -55,17 +54,17 @@ if (isset($_GET['transactionId'])) {
 <body>
     <div class="container px-3 my-5 clearfix">
         <!-- Shopping cart table -->
-        <?php if (isset($payment)) : ?>
+        <?php if (isset($payment)) { ?>
             <div class="alert alert-success">
                 Transaction Success
             </div>
-        <?php else : ?>
+        <?php } else { ?>
             <div class="alert alert-danger">
                 Transaction Failed
             </div>
-        <?php endif; ?>
+        <?php } ?>
 
-        <?php if (isset($payment)) : ?>
+        <?php if (isset($payment)) { ?>
             <div class="card">
                 <div class="card-header">
                     <h2>Transaction Details</h2>
@@ -114,7 +113,7 @@ if (isset($_GET['transactionId'])) {
                     </div>
                 </div>
             </div>
-        <?php endif; ?>
+        <?php } ?>
     </div>
 
     <script

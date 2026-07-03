@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-require dirname(__DIR__) . '/vendor/autoload.php';
+require dirname(__DIR__).'/vendor/autoload.php';
 
-require __DIR__ . '/constant.php';
-
+require __DIR__.'/constant.php';
 
 use Mds\Moncash\Config;
 use Mds\Moncash\Moncash;
@@ -27,6 +26,5 @@ var_dump($response->getRedirect());
 
 // Get Transaction Details by OrderId provided by your app.
 // $details = $moncash->getTransactionDetailsByOrderId('ORDER_ID');
-
 
 // var_dump($details);

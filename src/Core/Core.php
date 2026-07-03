@@ -6,6 +6,7 @@ namespace Mds\Moncash\Core;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\ClientException;
 use Mds\Moncash\Config;
 use Mds\Moncash\Exception\ApiException;
 
@@ -19,12 +20,12 @@ abstract class Core
     /**
      * config - Moncash Config Object
      */
-    private \Mds\Moncash\Config $config;
+    private Config $config;
 
     /**
      * authorization - Lazy-loaded Authorization (OAuth token)
      */
-    private ?\Mds\Moncash\Core\Authorization $authorization = null;
+    private ?Authorization $authorization = null;
 
     /**
      * _endpoint - Base API URL
@@ -55,7 +56,7 @@ abstract class Core
     {
         $this->config = $config;
         $this->setConfig($debug);
-        $this->_client = new Client();
+        $this->_client = new Client;
     }
 
     /**
@@ -104,7 +105,7 @@ abstract class Core
         }
 
         try {
-            $res = $this->_client->request('POST', $this->_endpoint . Constants::TOKEN_URI, [
+            $res = $this->_client->request('POST', $this->_endpoint.Constants::TOKEN_URI, [
                 'auth' => [$this->config->getClientId(), $this->config->getClientSecret()],
                 'query' => [
                     'grant_type' => 'client_credentials',
@@ -115,7 +116,7 @@ abstract class Core
             $this->authorization = Authorization::fromResponse($res);
 
             return $this->authorization;
-        } catch (\GuzzleHttp\Exception\ClientException $e) {
+        } catch (ClientException $e) {
             throw new ApiException($e->getResponse()->getBody()->getContents(), $e->getCode(), $e);
         }
     }

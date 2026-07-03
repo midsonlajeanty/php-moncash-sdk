@@ -6,6 +6,9 @@ use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Psr7\Response;
 use Mds\Moncash\Config;
 use Mds\Moncash\Moncash;
+use Mds\Moncash\Payment;
+use Mds\Moncash\PaymentDetails;
+use Mds\Moncash\PaymentRequest;
 use Mds\Moncash\PaymentResponse;
 use Mds\Moncash\TransactionDetails;
 
@@ -51,16 +54,16 @@ it('deprecated makePayment with orderId/amount routes to DTO and returns Payment
 });
 
 it('alias Mds\\Moncash\\Payment exists and is instanceof PaymentResponse', function (): void {
-    expect(class_exists(\Mds\Moncash\Payment::class))->toBeTrue();
+    expect(class_exists(Payment::class))->toBeTrue();
 
-    $expireAt = new \DateTime('2030-01-01');
+    $expireAt = new DateTime('2030-01-01');
     $instance = new PaymentResponse('order-1', 100.0, 'tok', $expireAt, 'https://gateway.example.com');
 
-    expect($instance)->toBeInstanceOf(\Mds\Moncash\Payment::class);
+    expect($instance)->toBeInstanceOf(Payment::class);
 });
 
 it('alias Mds\\Moncash\\PaymentDetails exists and is instanceof TransactionDetails', function (): void {
-    expect(class_exists(\Mds\Moncash\PaymentDetails::class))->toBeTrue();
+    expect(class_exists(PaymentDetails::class))->toBeTrue();
 
     $data = (object) [
         'reference' => 'ORDER-1',
@@ -71,7 +74,7 @@ it('alias Mds\\Moncash\\PaymentDetails exists and is instanceof TransactionDetai
     ];
     $instance = new TransactionDetails($data);
 
-    expect($instance)->toBeInstanceOf(\Mds\Moncash\PaymentDetails::class);
+    expect($instance)->toBeInstanceOf(PaymentDetails::class);
 });
 
 it('Config::fromArray() emits E_USER_DEPRECATED and returns valid Config', function (): void {
@@ -109,13 +112,13 @@ it('PaymentRequest::fromArray() emits E_USER_DEPRECATED and returns valid Paymen
         return true;
     });
 
-    $req = \Mds\Moncash\PaymentRequest::fromArray(['orderId' => 'ORDER-BC', 'amount' => 75.0]);
+    $req = PaymentRequest::fromArray(['orderId' => 'ORDER-BC', 'amount' => 75.0]);
 
     restore_error_handler();
 
     expect($deprecationCaught)->toBeTrue();
     expect($deprecationMessage)->toContain('PaymentRequest::fromArray()');
-    expect($req)->toBeInstanceOf(\Mds\Moncash\PaymentRequest::class);
+    expect($req)->toBeInstanceOf(PaymentRequest::class);
     expect($req->getOrderId())->toBe('ORDER-BC');
     expect($req->getAmount())->toBe(75.0);
 });

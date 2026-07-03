@@ -5,6 +5,7 @@ declare(strict_types=1);
 use GuzzleHttp\Psr7\Stream;
 use Mds\Moncash\Core\PaymentStatus;
 use Mds\Moncash\TransactionDetails;
+use Psr\Http\Message\ResponseInterface;
 
 it('creates transaction details with constructor', function (): void {
     $data = (object) [
@@ -43,9 +44,9 @@ it('creates transaction details from response interface', function (): void {
         ],
     ];
 
-    $response = Mockery::mock(\Psr\Http\Message\ResponseInterface::class);
+    $response = Mockery::mock(ResponseInterface::class);
     $response->shouldReceive('getBody')->andReturn(
-        new Stream(fopen('data://text/plain,' . json_encode($responseData), 'r'))
+        new Stream(fopen('data://text/plain,'.json_encode($responseData), 'r'))
     );
 
     $details = TransactionDetails::fromResponse($response);

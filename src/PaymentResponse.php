@@ -115,8 +115,8 @@ final class PaymentResponse
      */
     public function getRedirect(): string
     {
-        return $this->gateway . Constants::REDIRECT_URI . $this->getToken();
+        return $this->gateway.Constants::REDIRECT_URI.$this->getToken();
     }
 }
 
-\class_alias(PaymentResponse::class, \Mds\Moncash\Payment::class);
+\class_alias(PaymentResponse::class, Payment::class);

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Mds\Moncash\Core;
 
+use Psr\Http\Message\ResponseInterface;
+
 /**
  * Authorization
  */
@@ -25,7 +27,7 @@ final class Authorization
         $this->tokenType = (string) $data->token_type;
     }
 
-    public static function fromResponse(\Psr\Http\Message\ResponseInterface $res): Authorization
+    public static function fromResponse(ResponseInterface $res): Authorization
     {
         $data = json_decode((string) $res->getBody());
 
@@ -34,6 +36,6 @@ final class Authorization
 
     public function getAuthorizationHeader(): string
     {
-        return $this->tokenType . ' ' . $this->accessToken;
+        return $this->tokenType.' '.$this->accessToken;
     }
 }

@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-require dirname(__DIR__) . '/vendor/autoload.php';
+require dirname(__DIR__).'/vendor/autoload.php';
 
-require __DIR__ . '/constant.php';
-
+require __DIR__.'/constant.php';
 
 use Mds\Moncash\Config;
 use Mds\Moncash\Moncash;
@@ -137,13 +136,13 @@ if (isset($_POST['create_payment'])) {
                     <input type="hidden" name="order_id" value="<?= time() ?> ">
 
                     <div class="float-right">
-                        <?php if (isset($response)) : ?>
+                        <?php if (isset($response)) { ?>
                             <!-- Redirect to Payment URL -->
                             <a href="<?= $response->getRedirect() ?>" type="button" class="btn btn-lg btn-danger">Pay</a>
-                        <?php else : ?>
+                        <?php } else { ?>
                             <!-- Generate Payment URL -->
                             <button type="submit" name="create_payment" class="btn btn-lg btn-primary mt-2">Checkout</button>
-                        <?php endif; ?>
+                        <?php } ?>
                     </div>
                 </form>
             </div>

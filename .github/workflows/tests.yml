@@ -10,15 +10,26 @@ permissions:
   contents: read
 
 jobs:
-  tests:
+  test:
     runs-on: ubuntu-latest
 
     strategy:
       fail-fast: false
       matrix:
-        php: ['7.4', '8.0', '8.1', '8.2', '8.3', '8.4', '8.5']
+        php: ['8.2', '8.3', '8.4']
+        laravel: ['11.*', '12.*', '13.*']
+        include:
+          - laravel: '11.*'
+            testbench: '9.*'
+          - laravel: '12.*'
+            testbench: '10.*'
+          - laravel: '13.*'
+            testbench: '11.*'
+        exclude:
+          - laravel: '13.*'
+            php: '8.2'
 
-    name: PHP ${{ matrix.php }}
+    name: PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }}
 
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
@@ -32,31 +43,40 @@ jobs:
       - name: Validate composer.json
         run: composer validate --strict
 
-      - name: Cache Composer packages
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
-        with:
-          path: vendor
-          key: ${{ runner.os }}-php-${{ matrix.php }}-${{ hashFiles('**/composer.json') }}
-          restore-keys: |
-            ${{ runner.os }}-php-${{ matrix.php }}-
+      - name: Pin Laravel ${{ matrix.laravel }}
+        run: composer require "orchestra/testbench:${{ matrix.testbench }}" --dev --no-interaction --no-update
 
       - name: Install dependencies
-        if: contains(fromJSON('["8.1", "8.2", "8.3"]'), matrix.php)
         run: composer update --prefer-dist --no-progress
 
       - name: Run tests
-        if: contains(fromJSON('["8.1", "8.2", "8.3"]'), matrix.php)
         run: composer test
 
+  compat:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['7.4', '8.0', '8.1', '8.2', '8.3', '8.4', '8.5']
+
+    name: Runtime PHP ${{ matrix.php }}
+
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Setup PHP ${{ matrix.php }}
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2.37.2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+
       - name: Install runtime dependencies only
-        if: contains(fromJSON('["7.4", "8.0", "8.4", "8.5"]'), matrix.php)
         run: composer update --no-dev --prefer-dist --no-progress
 
       - name: Lint sources
-        if: contains(fromJSON('["7.4", "8.0", "8.4", "8.5"]'), matrix.php)
         run: find src -name '*.php' -print0 | xargs -0 -n1 php -l
 
       - name: Smoke-load the SDK
-        if: contains(fromJSON('["7.4", "8.0", "8.4", "8.5"]'), matrix.php)
         run: |
           php -r "require 'vendor/autoload.php'; exit(class_exists('Mds\\Moncash\\Moncash') ? 0 : 1);"

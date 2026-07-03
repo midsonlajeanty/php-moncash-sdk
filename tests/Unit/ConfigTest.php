@@ -25,5 +25,5 @@ test('config from array', function (): void {
 });
 
 test('config from array missing key throws InvalidConfigException', function (): void {
-    expect(fn(): \Mds\Moncash\Config => Config::from(['clientId' => 'only-id']))->toThrow(InvalidConfigException::class);
+    expect(fn (): Config => Config::from(['clientId' => 'only-id']))->toThrow(InvalidConfigException::class);
 });
