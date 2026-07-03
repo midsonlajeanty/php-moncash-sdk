@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
  
 ## [Unreleased]
 
+## [2.0.1] - 2026-07-03
+
+### Changed
+- Republished 2.0.0 under a corrected tag. Packagist immutably locked `2.0.0` to a pre-release commit that still declared `php ^7.4|^8.0`; `2.0.1` is the first correctly published 2.x release (PHP 8.2 floor, deprecated APIs removed). No source changes versus the intended 2.0.0.
+
 ## [2.0.0] - 2026-07-03
 
 ### Added
