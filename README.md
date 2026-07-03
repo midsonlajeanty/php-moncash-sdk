@@ -6,7 +6,7 @@
 
 <p align="center">
     <a href="https://github.com/midsonlajeanty/php-moncash-sdk/actions">
-        <img src="https://github.com/midsonlajeanty/php-moncash-sdk/actions/workflows/tests%20.yml/badge.svg" alt="Build Status">
+        <img src="https://github.com/midsonlajeanty/php-moncash-sdk/actions/workflows/tests.yml/badge.svg" alt="Build Status">
     </a>
     <a href="https://packagist.org/packages/midsonlajeanty/php-moncash-sdk">
         <img src="https://img.shields.io/packagist/dt/midsonlajeanty/php-moncash-sdk" alt="Total Downloads">
