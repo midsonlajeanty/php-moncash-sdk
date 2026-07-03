@@ -1,4 +1,5 @@
 {
+    "$schema": "https://getcomposer.org/schema.json",
     "name": "midsonlajeanty/php-moncash-sdk",
     "type": "library",
     "description": "Minimum SDK to process payment with Digicel Moncash Payment Gateway",
@@ -18,9 +19,37 @@
             "email": "midsonlajeanty@proton.me"
         }
     ],
+    "require": {
+        "php": "^8.2",
+        "guzzlehttp/guzzle": "^7.8"
+    },
+    "require-dev": {
+        "larastan/larastan": "^3.0",
+        "laravel/pint": "^1.13",
+        "mockery/mockery": "^1.6",
+        "orchestra/testbench": "^10.0|^11.0",
+        "pestphp/pest": "^3.0",
+        "phpstan/phpstan": "^2.1",
+        "phpstan/phpstan-mockery": "^2.0",
+        "rector/rector": "^2.3"
+    },
+    "suggest": {
+        "illuminate/support": "Enables the auto-discovered Laravel service provider and the Moncash facade (Laravel 12 and 13)."
+    },
+    "autoload": {
+        "psr-4": {
+            "Mds\\Moncash\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/",
+            "Workbench\\App\\": "workbench/app/"
+        }
+    },
     "scripts": {
-        "demo": "php example/cli.php",
-        "serve": "php -S localhost:1234 -t example",
+        "demo:cli": "php example/cli.php",
+        "demo:server": "php -S localhost:1234 -t example",
         "refactor": "./vendor/bin/rector process",
         "lint": "./vendor/bin/pint",
         "test:unit": "./vendor/bin/pest",
@@ -34,20 +63,6 @@
             "@test:types"
         ]
     },
-    "require": {
-        "php": "^8.2",
-        "guzzlehttp/guzzle": "^7.8"
-    },
-    "autoload": {
-        "psr-4": {
-            "Mds\\Moncash\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Tests\\": "tests/"
-        }
-    },
     "config": {
         "sort-packages": true,
         "allow-plugins": {
@@ -56,9 +71,6 @@
     },
     "minimum-stability": "stable",
     "prefer-stable": true,
-    "suggest": {
-        "illuminate/support": "Enables the auto-discovered Laravel service provider and the Moncash facade (Laravel 12 and 13)."
-    },
     "extra": {
         "branch-alias": {
             "dev-main": "1.x-dev"
@@ -71,15 +83,5 @@
                 "Moncash": "Mds\\Moncash\\Laravel\\Facades\\Moncash"
             }
         }
-    },
-    "require-dev": {
-        "larastan/larastan": "^3.0",
-        "laravel/pint": "^1.13",
-        "mockery/mockery": "^1.6",
-        "orchestra/testbench": "^8.0|^9.0|^10.0|^11.0",
-        "pestphp/pest": "^3.0",
-        "phpstan/phpstan": "^2.1",
-        "phpstan/phpstan-mockery": "^2.0",
-        "rector/rector": "^2.3"
     }
 }
