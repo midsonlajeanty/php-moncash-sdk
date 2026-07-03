@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
  
 ## [Unreleased]
 
+## [2.0.0] - 2026-07-03
+
 ### Added
 - `Config` object (+ `from()`), `PaymentRequest` DTO (+ `from()`).
 - Exception hierarchy: `InvalidConfigException`, `InvalidPaymentRequestException`, `ApiException` (subclasses of `MoncashException`).
