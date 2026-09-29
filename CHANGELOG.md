@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
  
 ## [Unreleased]
 
+## [2.1.0] - 2026-09-29
+
+### Changed
+- `guzzlehttp/guzzle` 8 is now supported alongside 7.8+.
+- Dev tooling accepts Pest 3, 4 and 5 so each PHP version in the CI matrix resolves the newest compatible release.
+
 ## [2.0.1] - 2026-07-03
 
 ### Changed
