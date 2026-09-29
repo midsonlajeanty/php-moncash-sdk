@@ -1,0 +1,23 @@
+pre-commit:
+  parallel: true
+  jobs:
+    - name: pint
+      glob: "*.php"
+      run: vendor/bin/pint {staged_files}
+      stage_fixed: true
+
+    - name: actionlint
+      glob: ".github/workflows/*.yml"
+      run: actionlint {staged_files}
+
+commit-msg:
+  jobs:
+    - name: conventional-commit
+      run: >-
+        head -n1 {1} | grep -qE '^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(\([a-z0-9-]+\))?!?: [^ ]'
+        || { echo "Commit message must follow Conventional Commits: type(scope)?: description"; exit 1; }
+
+pre-push:
+  jobs:
+    - name: composer-test
+      run: composer test
