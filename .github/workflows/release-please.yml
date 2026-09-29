@@ -1,0 +1,59 @@
+name: Release Please
+
+on:
+  workflow_run:  # zizmor: ignore[dangerous-triggers]
+    workflows: [CI, Security]
+    types: [completed]
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-please-${{ github.event.workflow_run.head_branch }}
+  cancel-in-progress: false
+
+jobs:
+  release-please:
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: write
+      pull-requests: write
+    outputs:
+      released: ${{ steps.release.outputs.release_created }}
+      tag: ${{ steps.release.outputs.tag_name }}
+    steps:
+      - name: Require every workflow to have passed on this commit
+        id: gate
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          for name in CI Security; do
+            conclusion=$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs?head_sha=${HEAD_SHA}&per_page=50" \
+              --jq ".workflow_runs[] | select(.name == \"${name}\") | .conclusion" | head -1)
+            echo "${name}: ${conclusion:-pending}"
+            if [ "${conclusion}" != "success" ]; then
+              echo "ready=false" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+          done
+          echo "ready=true" >> "$GITHUB_OUTPUT"
+
+      - if: steps.gate.outputs.ready == 'true'
+        id: release
+        uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
+        with:
+          config-file: release/config.json
+          manifest-file: release/.manifest.json
+
+  release:
+    needs: release-please
+    if: needs.release-please.outputs.released == 'true'
+    uses: ./.github/workflows/release.yml  # zizmor: ignore[self-repository]
+    with:
+      tag: ${{ needs.release-please.outputs.tag }}
+    permissions:
+      contents: write
