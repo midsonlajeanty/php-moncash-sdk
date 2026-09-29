@@ -52,7 +52,7 @@ composer refactor        # apply Rector refactorings
 
 - `declare(strict_types=1)` in every source file, typed properties and return types.
 - Keep the public API aligned with the NatCash SDK (see the "Common conventions" table in the README).
-- Backward compatibility: never remove a public method or class — deprecate it with `@trigger_error(..., E_USER_DEPRECATED)` and keep a delegating alias.
+- Backward compatibility: never remove a public method or class - deprecate it with `@trigger_error(..., E_USER_DEPRECATED)` and keep a delegating alias.
 - All code, comments, and documentation in English.
 
 ## Pull Requests

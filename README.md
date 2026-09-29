@@ -160,7 +160,7 @@ $gateway->shouldReceive('makePayment')->once()->andReturn($fakeResponse);
 $service = new CheckoutService($gateway);
 ```
 
-Value objects (`Config`, `PaymentRequest`, `PaymentResponse`, `TransactionDetails`) are also `final` — don't mock them, just construct them with test data.
+Value objects (`Config`, `PaymentRequest`, `PaymentResponse`, `TransactionDetails`) are also `final` - don't mock them, just construct them with test data.
 
 ## Contributing
 

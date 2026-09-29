@@ -24,7 +24,7 @@ if (isset($_GET['transactionId'])) {
         $errors = $e->getMessage();
     }
 } else {
-    // No transactionId provided — redirect to home
+    // No transactionId provided - redirect to home
     header('Location: /');
     http_response_code(302);
     exit;

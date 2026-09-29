@@ -31,4 +31,4 @@ You will receive an initial response within **72 hours**. Once the issue is conf
 
 ## Scope Notes
 
-This SDK handles payment credentials (client id / client secret) and OAuth tokens for the MonCash gateway. Never commit real credentials, and never paste secrets into a public issue. Treat the contents of `example/constant.php` as secrets — it is gitignored on purpose.
+This SDK handles payment credentials (client id / client secret) and OAuth tokens for the MonCash gateway. Never commit real credentials, and never paste secrets into a public issue. Treat the contents of `example/constant.php` as secrets - it is gitignored on purpose.
