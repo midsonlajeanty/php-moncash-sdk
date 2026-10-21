@@ -109,6 +109,9 @@ MONCASH_CLIENT_ID=your-client-id
 MONCASH_CLIENT_SECRET=your-client-secret
 # Sandbox gateway. Defaults to false (live); set true in local environments.
 MONCASH_DEBUG=true
+# HTTP timeouts in seconds. Both default to 10.
+MONCASH_TIMEOUT=10
+MONCASH_CONNECT_TIMEOUT=10
 ```
 
 Then use the facade, or inject `MoncashInterface` (both resolve the same configured singleton):
