@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Mds\Moncash\Core\Constants;
+use Mds\Moncash\Exception\InvalidConfigException;
 use Mds\Moncash\Laravel\Facades\Moncash;
 use Mds\Moncash\Moncash as MoncashGateway;
 use Mds\Moncash\MoncashInterface;
@@ -40,3 +41,15 @@ test('the resolved client falls back to the default timeouts', function (): void
     expect($client->getConfig('timeout'))->toBe((float) Constants::DEFAULT_TIMEOUT)
         ->and($client->getConfig('connect_timeout'))->toBe((float) Constants::DEFAULT_CONNECT_TIMEOUT);
 });
+
+test('resolving the gateway without a client id throws', function (string $value): void {
+    config()->set('moncash.client_id', $value);
+
+    app(MoncashInterface::class);
+})->with(['empty' => '', 'blank' => '   '])->throws(InvalidConfigException::class, 'moncash.client_id');
+
+test('resolving the gateway without a client secret throws', function (): void {
+    config()->set('moncash.client_secret', '');
+
+    app(MoncashInterface::class);
+})->throws(InvalidConfigException::class, 'moncash.client_secret');

@@ -10,6 +10,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use Mds\Moncash\Config;
 use Mds\Moncash\Core\Constants;
+use Mds\Moncash\Exception\InvalidConfigException;
 use Mds\Moncash\Moncash;
 use Mds\Moncash\MoncashInterface;
 
@@ -30,7 +31,7 @@ final class MoncashServiceProvider extends ServiceProvider
             $config = $repository->get('moncash', []);
 
             $moncash = new Moncash(
-                new Config((string) ($config['client_id'] ?? ''), (string) ($config['client_secret'] ?? '')),
+                new Config(self::required($config, 'client_id'), self::required($config, 'client_secret')),
                 (bool) ($config['debug'] ?? false)
             );
 
@@ -43,6 +44,22 @@ final class MoncashServiceProvider extends ServiceProvider
         });
 
         $this->app->alias(MoncashInterface::class, 'moncash');
+    }
+
+    /**
+     * @param  array<string, mixed>  $config
+     *
+     * @throws InvalidConfigException
+     */
+    private static function required(array $config, string $key): string
+    {
+        $value = trim((string) ($config[$key] ?? ''));
+
+        if ($value === '') {
+            throw new InvalidConfigException(sprintf('Missing `moncash.%s` configuration (MONCASH_%s).', $key, strtoupper($key)));
+        }
+
+        return $value;
     }
 
     /**
