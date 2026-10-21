@@ -29,4 +29,19 @@ return [
     */
 
     'debug' => (bool) env('MONCASH_DEBUG', false),
+
+    /*
+    |--------------------------------------------------------------------------
+    | HTTP timeouts
+    |--------------------------------------------------------------------------
+    |
+    | Seconds to wait for the MonCash gateway to accept the connection and to
+    | answer a request. Without them an unreachable gateway blocks each call
+    | for minutes.
+    |
+    */
+
+    'timeout' => (float) env('MONCASH_TIMEOUT', 10),
+
+    'connect_timeout' => (float) env('MONCASH_CONNECT_TIMEOUT', 10),
 ];

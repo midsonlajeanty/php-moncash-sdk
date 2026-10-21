@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Mds\Moncash\Laravel;
 
+use GuzzleHttp\Client;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use Mds\Moncash\Config;
+use Mds\Moncash\Core\Constants;
 use Mds\Moncash\Moncash;
 use Mds\Moncash\MoncashInterface;
 
@@ -27,10 +29,17 @@ final class MoncashServiceProvider extends ServiceProvider
             /** @var array<string, mixed> $config */
             $config = $repository->get('moncash', []);
 
-            return new Moncash(
+            $moncash = new Moncash(
                 new Config((string) ($config['client_id'] ?? ''), (string) ($config['client_secret'] ?? '')),
                 (bool) ($config['debug'] ?? false)
             );
+
+            $moncash->setClient(new Client([
+                'timeout' => (float) ($config['timeout'] ?? Constants::DEFAULT_TIMEOUT),
+                'connect_timeout' => (float) ($config['connect_timeout'] ?? Constants::DEFAULT_CONNECT_TIMEOUT),
+            ]));
+
+            return $moncash;
         });
 
         $this->app->alias(MoncashInterface::class, 'moncash');

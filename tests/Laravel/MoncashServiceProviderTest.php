@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Mds\Moncash\Core\Constants;
 use Mds\Moncash\Laravel\Facades\Moncash;
 use Mds\Moncash\Moncash as MoncashGateway;
 use Mds\Moncash\MoncashInterface;
@@ -16,4 +17,26 @@ test('the gateway is a singleton reachable through the moncash alias', function 
 
 test('the facade proxies to the bound gateway', function (): void {
     expect(Moncash::getFacadeRoot())->toBeInstanceOf(MoncashGateway::class);
+});
+
+test('the resolved client carries the configured timeouts', function (): void {
+    config()->set('moncash.timeout', 7.5);
+    config()->set('moncash.connect_timeout', 3);
+
+    $client = app(MoncashInterface::class)->getClient();
+
+    expect($client->getConfig('timeout'))->toBe(7.5)
+        ->and($client->getConfig('connect_timeout'))->toBe(3.0);
+});
+
+test('the resolved client falls back to the default timeouts', function (): void {
+    config()->set('moncash', [
+        'client_id' => 'test-client-id',
+        'client_secret' => 'test-client-secret',
+    ]);
+
+    $client = app(MoncashInterface::class)->getClient();
+
+    expect($client->getConfig('timeout'))->toBe((float) Constants::DEFAULT_TIMEOUT)
+        ->and($client->getConfig('connect_timeout'))->toBe((float) Constants::DEFAULT_CONNECT_TIMEOUT);
 });
