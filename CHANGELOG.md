@@ -1,8 +1,20 @@
-
 # Change Log
 All notable changes to this project will be documented in this file.
  
  
+## [2.2.0](https://github.com/midsonlajeanty/php-moncash-sdk/compare/v2.1.0...v2.2.0) (2026-10-21)
+
+
+### Features
+
+* configure the laravel client timeouts from moncash.timeout and moncash.connect_timeout ([703c22e](https://github.com/midsonlajeanty/php-moncash-sdk/commit/703c22e5a436645b025858c6e3e0fc07e90e09f3))
+* reject a missing moncash client id or secret when the gateway is resolved ([669e85d](https://github.com/midsonlajeanty/php-moncash-sdk/commit/669e85da7c683a265f83f51d42478307f3942b66))
+
+
+### Bug Fixes
+
+* bound the default guzzle client with ten-second timeouts ([7aeaf01](https://github.com/midsonlajeanty/php-moncash-sdk/commit/7aeaf0195caa130b902b3e1bc8014eb5fb69f49c))
+
 ## [2.1.0] - 2026-09-29
 
 ### Changed
