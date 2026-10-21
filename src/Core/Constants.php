@@ -28,4 +28,8 @@ final class Constants
     public const DETAILS_TRANSACTION_URI = '/v1/RetrieveTransactionPayment';
 
     public const DETAILS_ORDER_URI = '/v1/RetrieveOrderPayment';
+
+    public const DEFAULT_TIMEOUT = 10;
+
+    public const DEFAULT_CONNECT_TIMEOUT = 10;
 }
