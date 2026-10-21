@@ -50,7 +50,10 @@ abstract class Core
     public function __construct(private Config $config, bool $debug = true)
     {
         $this->setConfig($debug);
-        $this->_client = new Client;
+        $this->_client = new Client([
+            'timeout' => Constants::DEFAULT_TIMEOUT,
+            'connect_timeout' => Constants::DEFAULT_CONNECT_TIMEOUT,
+        ]);
     }
 
     /**
